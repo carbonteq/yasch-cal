@@ -1,0 +1,20 @@
+.time-grid {
+    position: relative;
+    display: grid;
+    /* Add custom grid styling */
+}
+
+.time-grid-marker {
+    /* Add custom time marker styling */
+}
+
+.time-grid-slot {
+    /* Add custom slot styling */
+    background-color: red;
+}
+
+.time-grid-current-time,
+.time-grid-current-time-line,
+.time-grid-current-time-dot {
+    background-color: red;
+}

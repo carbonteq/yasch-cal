@@ -1,0 +1,16 @@
+.week-header {
+    display: flex;
+    gap: 10px;
+}
+
+.week-header-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5px;
+}
+
+.week-header-cell-date {
+    color: #666;
+}

@@ -1,0 +1,94 @@
+/**
+ * Formats a date to ISO string (YYYY-MM-DD)
+ * @param date - Date to format
+ * @returns Formatted date string
+ */
+const formatToISO = (date: Date) => {
+    const isoString = date.toISOString();
+
+    return isoString.split("T")[0] ?? "";
+};
+
+/**
+ * Adds or subtracts days from a given date
+ * @param date - The date to modify
+ * @param days - Number of days to add (positive) or subtract (negative)
+ * @returns New date with days added/subtracted
+ */
+const addDays = (date: Date, days: number) => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + days);
+
+    return newDate;
+};
+
+/**
+ * Gets the start and end dates of the week containing the given date
+ * @param date - Any date within the target week
+ * @param startDay - Day of week to start from (0 = Sunday, 1 = Monday, etc.)
+ * @returns Object containing start and end dates of the week
+ */
+const getWeekRange = (date: Date, startDay: number = 1) => {
+    // Create a new date object to avoid mutating the input
+    const currentDate = new Date(date);
+
+    // Get the current day of week (0 = Sunday, 1 = Monday, etc.)
+    const currentDay = currentDate.getDay();
+
+    // Calculate the difference between current day and start day
+    // If current day is less than start day, we need to go back to previous week
+    let diff = currentDay - startDay;
+    if (diff < 0) {
+        diff += 7;
+    }
+
+    // Set the date to the start of the week
+    currentDate.setDate(currentDate.getDate() - diff);
+
+    // Create end date by adding 6 days to start date
+    const endDate = new Date(currentDate);
+    endDate.setDate(endDate.getDate() + 6);
+
+    return {
+        start: new Date(currentDate),
+        end: endDate
+    };
+};
+
+/**
+ * Gets an array of dates between start and end dates (inclusive)
+ * @param start - Start date
+ * @param end - End date
+ * @returns Array of dates
+ */
+const getDatesInRange = (start: Date, end: Date) => {
+    const dates: Date[] = [];
+    const currentDate = new Date(start);
+
+    while (currentDate <= end) {
+        dates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return dates;
+};
+
+/**
+ * Gets an array of dates for the week containing the given date
+ * @param date - Any date within the target week
+ * @param startDay - Day of week to start from (0 = Sunday, 1 = Monday, etc.)
+ * @returns Array of dates for the week
+ */
+const getWeekDates = (date: Date, startDay: number = 1) => {
+    const {start, end} = getWeekRange(date, startDay);
+
+    return getDatesInRange(start, end);
+};
+
+export const DateUtils = {
+    getWeekRange,
+    getDatesInRange,
+    getWeekDates,
+    formatToISO,
+    addDays
+};
