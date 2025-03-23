@@ -19,7 +19,7 @@ export const App = () => {
                 <DayView>
                     <HourSlot
                         onSlotSelect={(slot) => {
-                            console.log("slot", slot);
+                            console.log("slotTime", slot);
                         }}
                     />
                 </DayView>

@@ -10,6 +10,22 @@ const formatToISO = (date: Date) => {
 };
 
 /**
+ * Formats a date to a string (YYYY-MM-DD HH:MM:SS)
+ * @param date - Date to format
+ * @returns Formatted date string
+ */
+const formatDateTime = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+/**
  * Adds or subtracts days from a given date
  * @param date - The date to modify
  * @param days - Number of days to add (positive) or subtract (negative)
@@ -18,6 +34,13 @@ const formatToISO = (date: Date) => {
 const addDays = (date: Date, days: number) => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
+
+    return newDate;
+};
+
+const addMinutes = (date: Date, minutes: number) => {
+    const newDate = new Date(date);
+    newDate.setMinutes(newDate.getMinutes() + minutes);
 
     return newDate;
 };
@@ -90,5 +113,7 @@ export const DateUtils = {
     getDatesInRange,
     getWeekDates,
     formatToISO,
-    addDays
+    addDays,
+    addMinutes,
+    formatDateTime
 };

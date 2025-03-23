@@ -53,9 +53,13 @@ export interface WeekView extends PropsWithChildren {
     showWeekends?: boolean;
 }
 
-export interface DayView extends PropsWithChildren {}
+export interface DayView extends PropsWithChildren {
+    weekDay?: WeekDay;
+}
 
 export interface HourSlot extends Styling {
+    start?: Date;
+    end?: Date;
     height?: number | string;
     onSlotSelect?: (slot: TimeRange) => void;
     isSlotSelectAllowed?: (slot: TimeRange) => boolean;

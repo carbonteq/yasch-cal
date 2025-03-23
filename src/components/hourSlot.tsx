@@ -23,10 +23,14 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
             onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                props.onSlotSelect?.({
-                    start: new Date(),
-                    end: new Date()
-                });
+
+                if (props.start && props.end) {
+                    const timeRange = {start: props.start, end: props.end};
+
+                    if (!props.isSlotSelectAllowed || props.isSlotSelectAllowed(timeRange)) {
+                        props.onSlotSelect?.(timeRange);
+                    }
+                }
             }}>
             <div className="hour-slot-content">asdsadsad</div>
         </div>

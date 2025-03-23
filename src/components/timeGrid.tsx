@@ -21,17 +21,17 @@ export const TimeGrid: FC<TimeGridProps> = (props) => {
             displayFormat: props.displayFormat ?? Defaults.TIME_GRID_CONFIG.displayFormat
         });
 
-        ctx.setTimeGridSlots(generateTimeSlots());
+        ctx.setTimeGridSlots(generateTimeSlots(props.interval));
     }, [props.displayFormat, ctx.setTimeGridConfig, props.hourRange, props.interval, props.showCurrentTimeIndicator]);
 
-    const generateTimeSlots = () => {
+    const generateTimeSlots = (interval: number = 60) => {
         const slots: Date[] = [];
         const [startHour, endHour] = ctx.timeGridConfig.hourRange;
-        const slotCount = ((endHour - startHour + 1) * 60) / ctx.timeGridConfig.interval;
+        const slotCount = ((endHour - startHour + 1) * 60) / interval;
 
         for (let i = 0; i < slotCount; i++) {
-            const hour = Math.floor((i * ctx.timeGridConfig.interval) / 60) + startHour;
-            const minutes = (i * ctx.timeGridConfig.interval) % 60;
+            const hour = Math.floor((i * interval) / 60) + startHour;
+            const minutes = (i * interval) % 60;
             const time = new Date();
             time.setHours(hour, minutes, 0, 0);
             slots.push(time);

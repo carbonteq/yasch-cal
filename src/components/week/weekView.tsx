@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 
 import {Defaults} from "@/constants/default.constant";
 
-import type {WeekView as WeekViewProps} from "@/types/calendar.type";
+import type {DayView as DayViewProps, WeekDay, WeekView as WeekViewProps} from "@/types/calendar.type";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
 import {ReactUtils} from "@/utils/react.utils";
@@ -15,9 +15,11 @@ export const WeekView: React.FC<WeekViewProps> = (props) => {
 
     const children = React.Children.toArray(props.children);
 
-    const weekArr = Array.from({length: 7}, (_, index) => index);
+    const weekArr = Array.from({length: 7}, (_, index) => (index + (ctx.weekViewConfig.firstDayOfWeek ?? 0)) % 7);
 
     const timeGridChild = children.find((child) => ReactUtils.isReactElement(child) && child.type === TimeGrid);
+
+    const dayViewChildren = children.filter((child) => ReactUtils.isReactElement(child) && child.type === DayView);
 
     useEffect(() => {
         ctx.setWeekViewConfig({
@@ -39,7 +41,9 @@ export const WeekView: React.FC<WeekViewProps> = (props) => {
                 }}>
                 {weekArr.map((day) => (
                     <div key={day} className="day-view-container-item" style={{flex: 1}}>
-                        {children.find((child) => ReactUtils.isReactElement(child) && child.type === DayView)}
+                        {React.Children.map(dayViewChildren, (child) =>
+                            React.cloneElement(child as React.ReactElement<DayViewProps>, {weekDay: day as WeekDay})
+                        )}
                     </div>
                 ))}
             </div>
