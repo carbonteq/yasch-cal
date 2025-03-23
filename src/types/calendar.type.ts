@@ -2,8 +2,8 @@ import type {IDateDisplayFormats, ITimeDisplayFormats} from "@/types/date.type";
 import type {PropsWithChildren} from "react";
 
 export interface TimeRange {
-    start: string; // ISO date string
-    end: string; // ISO date string
+    start: Date; // ISO date string
+    end: Date; // ISO date string
 }
 
 export type WeekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -28,9 +28,7 @@ interface Styling {
     style?: React.CSSProperties;
 }
 
-export interface Calendar extends Styling, PropsWithChildren {
-    height?: number | string;
-}
+export interface Calendar extends Styling, PropsWithChildren {}
 
 export interface TimeGrid {
     hourRange?: [number, number];

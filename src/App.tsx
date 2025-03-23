@@ -1,3 +1,5 @@
+import "@/styles/main.style.css";
+
 import {WeekHeader} from "@/components/week/weekHeader";
 
 import {Calendar} from "./components/calendar";
@@ -15,7 +17,11 @@ export const App = () => {
             <WeekView firstDayOfWeek={1}>
                 <TimeGrid />
                 <DayView>
-                    <HourSlot />
+                    <HourSlot
+                        onSlotSelect={(slot) => {
+                            console.log("slot", slot);
+                        }}
+                    />
                 </DayView>
             </WeekView>
         </Calendar>

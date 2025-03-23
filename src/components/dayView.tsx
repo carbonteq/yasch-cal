@@ -7,7 +7,7 @@ export const DayView: FC<DayViewProps> = (props) => {
     const ctx = useCalendarProvider();
 
     return (
-        <div className="day-view" style={{height: "100%", width: "100%"}}>
+        <div className="day-view">
             {ctx.timeGridSlots.map((_, index) => (
                 <div key={index} className="day-view-slot">
                     {props.children}

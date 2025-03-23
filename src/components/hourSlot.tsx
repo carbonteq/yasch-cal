@@ -19,7 +19,15 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
     return (
         <div
             className="hour-slot"
-            style={{height: ctx.hourSlotConfig.slotHeight, border: "1px solid red", width: "100%"}}>
+            style={{height: ctx.hourSlotConfig.slotHeight}}
+            onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                props.onSlotSelect?.({
+                    start: new Date(),
+                    end: new Date()
+                });
+            }}>
             <div className="hour-slot-content">asdsadsad</div>
         </div>
     );

@@ -6,9 +6,7 @@ import type {FC} from "react";
 export const Calendar: FC<CalendarProps> = (props) => {
     return (
         <CalendarProvider>
-            <div className="calendar" style={{height: "100%"}}>
-                {props.children}
-            </div>
+            <div className="calendar">{props.children}</div>
         </CalendarProvider>
     );
 };

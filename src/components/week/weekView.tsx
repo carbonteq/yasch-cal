@@ -17,6 +17,8 @@ export const WeekView: React.FC<WeekViewProps> = (props) => {
 
     const weekArr = Array.from({length: 7}, (_, index) => index);
 
+    const timeGridChild = children.find((child) => ReactUtils.isReactElement(child) && child.type === TimeGrid);
+
     useEffect(() => {
         ctx.setWeekViewConfig({
             showWeekends: props.showWeekends ?? Defaults.WEEK_VIEW_CONFIG.showWeekends,
@@ -26,18 +28,17 @@ export const WeekView: React.FC<WeekViewProps> = (props) => {
 
     return (
         <div className="week-view" style={{height: "100%", display: "flex", flexDirection: "row"}}>
-            {children.find((child) => ReactUtils.isReactElement(child) && child.type === TimeGrid)}
+            {timeGridChild}
             <div
                 className="day-view-container"
                 style={{
                     display: "flex",
                     flexDirection: "row",
                     width: "100%",
-                    height: "100%",
-                    flexGrow: 1
+                    height: "100%"
                 }}>
                 {weekArr.map((day) => (
-                    <div key={day} className="day-view-container-item">
+                    <div key={day} className="day-view-container-item" style={{flex: 1}}>
                         {children.find((child) => ReactUtils.isReactElement(child) && child.type === DayView)}
                     </div>
                 ))}
