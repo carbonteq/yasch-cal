@@ -108,6 +108,18 @@ const getWeekDates = (date: Date, startDay: number = 1) => {
     return getDatesInRange(start, end);
 };
 
+/**
+ * Gets the difference in minutes between two dates
+ * @param start - Start date
+ * @param end - End date
+ * @returns Difference in minutes
+ */
+const getTimeDifferenceInMinutes = (start: Date, end: Date) => {
+    const diff = end.getTime() - start.getTime();
+
+    return diff / (1000 * 60);
+};
+
 export const DateUtils = {
     getWeekRange,
     getDatesInRange,
@@ -115,5 +127,6 @@ export const DateUtils = {
     formatToISO,
     addDays,
     addMinutes,
-    formatDateTime
+    formatDateTime,
+    getTimeDifferenceInMinutes
 };

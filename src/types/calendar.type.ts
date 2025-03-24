@@ -60,7 +60,7 @@ export interface DayView extends PropsWithChildren {
 export interface HourSlot extends Styling {
     start?: Date;
     end?: Date;
-    height?: number | string;
+    height?: number;
     onSlotSelect?: (slot: TimeRange) => void;
     isSlotSelectAllowed?: (slot: TimeRange) => boolean;
 }
@@ -73,6 +73,11 @@ export interface Event extends PropsWithChildren {
 
 export interface EventItem extends Styling {
     event?: CalendarEvent;
+    index?: number;
+    top?: number;
+    left?: number;
+    width?: number;
+    height?: number;
     onEventClick?: (event: CalendarEvent) => void;
     onEventDrop?: (event: UpdatedCalendarEvent) => void;
     onEventResize?: (event: UpdatedCalendarEvent) => void;

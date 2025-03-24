@@ -19,7 +19,7 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
     return (
         <div
             className="hour-slot"
-            style={{height: ctx.hourSlotConfig.slotHeight}}
+            style={{height: `${ctx.hourSlotConfig.slotHeight}px`}}
             onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();

@@ -30,9 +30,9 @@ export interface ICalendarContext {
     setTimeGridSlots: Dispatch<SetStateAction<Date[]>>;
 
     hourSlotConfig: {
-        slotHeight: number | string;
+        slotHeight: number;
     };
-    setHourSlotConfig: Dispatch<SetStateAction<{slotHeight: number | string}>>;
+    setHourSlotConfig: Dispatch<SetStateAction<{slotHeight: number}>>;
 
     eventConfig: Event;
     setEventConfig: Dispatch<SetStateAction<Event>>;

@@ -11,5 +11,18 @@ export const EventItem: FC<EventItemProps> = (props) => {
             </>
         );
 
-    return <div className="event-item">{content}</div>;
+    return (
+        <div
+            className="event-item"
+            style={{
+                position: "absolute",
+                zIndex: props.index,
+                top: props.top,
+                left: props.left,
+                width: props.width,
+                height: props.height
+            }}>
+            {content}
+        </div>
+    );
 };

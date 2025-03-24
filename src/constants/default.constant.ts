@@ -27,7 +27,7 @@ const TIME_GRID_CONFIG = {
 } as const;
 
 const HOUR_SLOT_CONFIG = {
-    slotHeight: 48 as string | number
+    slotHeight: 48 as number
 };
 
 const EVENT_CONFIG = {

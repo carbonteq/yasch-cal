@@ -17,7 +17,7 @@ export const App = () => {
             id: "1",
             title: "Event 1",
             start: new Date("2025-03-24T00:00:00.000Z"),
-            end: new Date("2025-03-24T01:00:00.000Z"),
+            end: new Date("2025-03-24T00:15:00.000Z"),
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
@@ -25,7 +25,7 @@ export const App = () => {
             id: "2",
             title: "Event 2",
             start: new Date("2025-03-25T01:00:00.000Z"),
-            end: new Date("2025-03-25T02:00:00.000Z"),
+            end: new Date("2025-03-25T01:30:00.000Z"),
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
@@ -33,7 +33,7 @@ export const App = () => {
             id: "3",
             title: "Event 3",
             start: new Date("2025-03-26T02:00:00.000Z"),
-            end: new Date("2025-03-26T03:00:00.000Z"),
+            end: new Date("2025-03-26T02:45:00.000Z"),
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         }
