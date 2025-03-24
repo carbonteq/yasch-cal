@@ -1,3 +1,10 @@
+/**
+ * Calculates the top position of an event
+ * @param eventStart - The start date of the event
+ * @param slotHeight - The height of the slot
+ * @param distanceFromTop - The distance from the top of the calendar
+ * @returns The top position of the event
+ */
 const calculateTopPosition = (eventStart: Date, slotHeight: number, distanceFromTop: number) => {
     // For the start position, we need to calculate minutes since midnight
     const hours = eventStart.getHours();
@@ -12,6 +19,13 @@ const calculateTopPosition = (eventStart: Date, slotHeight: number, distanceFrom
     return top;
 };
 
+/**
+ * Calculates the left position of an event
+ * @param eventStart - The start date of the event
+ * @param calendarWidth - The width of the calendar
+ * @param distanceFromLeft - The distance from the left of the calendar
+ * @returns The left position of the event
+ */
 const calculateLeftPosition = (eventStart: Date, calendarWidth: number, distanceFromLeft: number) => {
     // Default column width - assuming 7 equal columns for days of the week
     // You would need to know the total width of the calendar grid
@@ -27,7 +41,25 @@ const calculateLeftPosition = (eventStart: Date, calendarWidth: number, distance
     return left;
 };
 
+/**
+ * Gets the coordinates of an element
+ * @param elementId - The id of the element
+ * @returns The coordinates of the element
+ */
+const getElementCoordinates = (elementId: string) => {
+    const element = document.querySelector(elementId) as HTMLElement;
+
+    if (!element) {
+        return null;
+    }
+
+    const rect = element.getBoundingClientRect();
+
+    return rect;
+};
+
 export const CssUtil = {
     calculateTopPosition,
-    calculateLeftPosition
+    calculateLeftPosition,
+    getElementCoordinates
 };

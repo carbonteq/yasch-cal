@@ -39,8 +39,6 @@ export interface ICalendarContext {
 
     events: CalendarEvent[];
     setEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
-
-    getElementCoordinates: (elementId: string) => DOMRect | null;
 }
 export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => {
     const [weekViewConfig, setWeekViewConfig] = useState<WeekView>(Defaults.WEEK_VIEW_CONFIG);
@@ -62,18 +60,6 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
     const [eventConfig, setEventConfig] = useState<Event>(Defaults.EVENT_CONFIG);
 
     const [events, setEvents] = useState<CalendarEvent[]>([]);
-
-    const getElementCoordinates = (elementId: string) => {
-        const element = document.querySelector(elementId) as HTMLElement;
-
-        if (!element) {
-            return null;
-        }
-
-        const rect = element.getBoundingClientRect();
-
-        return rect;
-    };
 
     return (
         <CalendarContext.Provider
@@ -103,9 +89,7 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
                 setEventConfig,
 
                 events,
-                setEvents,
-
-                getElementCoordinates
+                setEvents
             }}>
             {props.children}
         </CalendarContext.Provider>
