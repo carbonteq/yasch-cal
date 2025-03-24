@@ -31,8 +31,7 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
                         props.onSlotSelect?.(timeRange);
                     }
                 }
-            }}>
-            <div className="hour-slot-content">asdsadsad</div>
-        </div>
+            }}
+        />
     );
 };

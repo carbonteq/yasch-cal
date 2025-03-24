@@ -2,7 +2,7 @@ import {useState} from "react";
 
 import {Defaults} from "@/constants/default.constant";
 
-import type {TimeGrid, WeekHeader, WeekView} from "@/types/calendar.type";
+import type {CalendarEvent, Event, TimeGrid, WeekHeader, WeekView} from "@/types/calendar.type";
 import type {Dispatch, PropsWithChildren, SetStateAction} from "react";
 
 import {CalendarContext} from "@/contexts/calendar.context";
@@ -33,6 +33,12 @@ export interface ICalendarContext {
         slotHeight: number | string;
     };
     setHourSlotConfig: Dispatch<SetStateAction<{slotHeight: number | string}>>;
+
+    eventConfig: Event;
+    setEventConfig: Dispatch<SetStateAction<Event>>;
+
+    events: CalendarEvent[];
+    setEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
 }
 export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => {
     const [weekViewConfig, setWeekViewConfig] = useState<WeekView>(Defaults.WEEK_VIEW_CONFIG);
@@ -51,6 +57,10 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
 
     const [hourSlotConfig, setHourSlotConfig] = useState(Defaults.HOUR_SLOT_CONFIG);
 
+    const [eventConfig, setEventConfig] = useState<Event>(Defaults.EVENT_CONFIG);
+
+    const [events, setEvents] = useState<CalendarEvent[]>([]);
+
     return (
         <CalendarContext.Provider
             value={{
@@ -67,7 +77,11 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
                 timeGridSlots,
                 setTimeGridSlots,
                 hourSlotConfig,
-                setHourSlotConfig
+                setHourSlotConfig,
+                eventConfig,
+                setEventConfig,
+                events,
+                setEvents
             }}>
             {props.children}
         </CalendarContext.Provider>

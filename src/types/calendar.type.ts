@@ -72,6 +72,7 @@ export interface Event extends PropsWithChildren {
 }
 
 export interface EventItem extends Styling {
+    event?: CalendarEvent;
     onEventClick?: (event: CalendarEvent) => void;
     onEventDrop?: (event: UpdatedCalendarEvent) => void;
     onEventResize?: (event: UpdatedCalendarEvent) => void;

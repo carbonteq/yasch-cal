@@ -30,10 +30,17 @@ const HOUR_SLOT_CONFIG = {
     slotHeight: 48 as string | number
 };
 
+const EVENT_CONFIG = {
+    minEventDuration: 15,
+    maxEventDuration: 1440, // 24 hours,
+    events: []
+};
+
 export const Defaults = {
     WEEK_HEADER_DISPLAY_FORMAT,
     WEEK_VIEW_CONFIG,
     WEEK_HEADER_CONFIG,
     TIME_GRID_CONFIG,
-    HOUR_SLOT_CONFIG
+    HOUR_SLOT_CONFIG,
+    EVENT_CONFIG
 };
