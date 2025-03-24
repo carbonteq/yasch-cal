@@ -1,10 +1,11 @@
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 
-import type {EventItem as EventItemProps, Event as EventProps} from "@/types/calendar.type";
+import type {Event as EventProps} from "@/types/calendar.type";
 import type {FC} from "react";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
 import {DateUtils} from "@/utils/date.util";
+import {ReactUtils} from "@/utils/react.utils";
 
 export const Event: FC<EventProps> = (props) => {
     const ctx = useCalendarProvider();
@@ -46,16 +47,10 @@ export const Event: FC<EventProps> = (props) => {
 
                 return (
                     <div key={event.id}>
-                        {React.Children.map(props.children, (child) => {
-                            if (React.isValidElement(child)) {
-                                return React.cloneElement(child as React.ReactElement<EventItemProps>, {
-                                    event,
-                                    index,
-                                    height: cardHeight
-                                });
-                            }
-
-                            return child;
+                        {ReactUtils.passExtraPropToChildren(props.children, {
+                            event,
+                            index,
+                            height: cardHeight
                         })}
                     </div>
                 );

@@ -1,10 +1,9 @@
-import React from "react";
-
-import type {DayView as DayViewProps, HourSlot} from "@/types/calendar.type";
+import type {DayView as DayViewProps} from "@/types/calendar.type";
 import type {FC} from "react";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
 import {DateUtils} from "@/utils/date.util";
+import {ReactUtils} from "@/utils/react.utils";
 
 export const DayView: FC<DayViewProps> = (props) => {
     const ctx = useCalendarProvider();
@@ -20,15 +19,9 @@ export const DayView: FC<DayViewProps> = (props) => {
 
                 return (
                     <div key={index} className="day-view-slot">
-                        {React.Children.map(props.children, (child) => {
-                            if (React.isValidElement(child)) {
-                                return React.cloneElement(child as React.ReactElement<HourSlot>, {
-                                    start,
-                                    end
-                                });
-                            }
-
-                            return child;
+                        {ReactUtils.passExtraPropToChildren(props.children, {
+                            start,
+                            end
                         })}
                     </div>
                 );

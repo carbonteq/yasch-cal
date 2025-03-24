@@ -1,11 +1,12 @@
 import "@/styles/toolbar.style.css";
 
 import type {Toolbar as ToolbarProps} from "@/types/calendar.type";
+import type {FC} from "react";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
 import {DateUtils} from "@/utils/date.util";
 
-export const Toolbar: React.FC<ToolbarProps> = (props) => {
+export const Toolbar: FC<ToolbarProps> = (props) => {
     const ctx = useCalendarProvider();
 
     return (

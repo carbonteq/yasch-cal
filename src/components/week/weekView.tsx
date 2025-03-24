@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 
 import {Defaults} from "@/constants/default.constant";
 
-import type {DayView as DayViewProps, WeekDay, WeekView as WeekViewProps} from "@/types/calendar.type";
+import type {WeekDay, WeekView as WeekViewProps} from "@/types/calendar.type";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
 import {ReactUtils} from "@/utils/react.utils";
@@ -41,9 +41,7 @@ export const WeekView: React.FC<WeekViewProps> = (props) => {
                 }}>
                 {weekArr.map((day) => (
                     <div key={day} className="day-view-container-item" style={{flex: 1}}>
-                        {React.Children.map(dayViewChildren, (child) =>
-                            React.cloneElement(child as React.ReactElement<DayViewProps>, {weekDay: day as WeekDay})
-                        )}
+                        {ReactUtils.passExtraPropToChildren(dayViewChildren, {weekDay: day as WeekDay})}
                     </div>
                 ))}
             </div>
