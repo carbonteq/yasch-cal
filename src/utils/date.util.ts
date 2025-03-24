@@ -1,3 +1,5 @@
+import type {CalendarEvent} from "@/types/calendar.type";
+
 /**
  * Formats a date to ISO string (YYYY-MM-DD)
  * @param date - Date to format
