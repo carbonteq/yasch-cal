@@ -16,24 +16,32 @@ export const App = () => {
         {
             id: "1",
             title: "Event 1",
-            start: new Date("2025-03-24T00:00:00.000Z"),
-            end: new Date("2025-03-24T00:15:00.000Z"),
+            start: new Date("2025-03-24T00:00:00"),
+            end: new Date("2025-03-24T00:15:00"),
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
         {
             id: "2",
             title: "Event 2",
-            start: new Date("2025-03-25T01:00:00.000Z"),
-            end: new Date("2025-03-25T01:30:00.000Z"),
+            start: new Date("2025-03-25T01:00:00"),
+            end: new Date("2025-03-25T03:00:00"),
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
         {
             id: "3",
             title: "Event 3",
-            start: new Date("2025-03-26T02:00:00.000Z"),
-            end: new Date("2025-03-26T02:45:00.000Z"),
+            start: new Date("2025-03-26T23:00:00"),
+            end: new Date("2025-03-26T23:45:00"),
+            randomProp1: "randomValue",
+            randomProp2: "randomValue2"
+        },
+        {
+            id: "4",
+            title: "Event 4",
+            start: new Date("2025-03-24T00:00:00"),
+            end: new Date("2025-03-24T00:30:00"),
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         }

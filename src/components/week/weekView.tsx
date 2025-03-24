@@ -29,7 +29,7 @@ export const WeekView: React.FC<WeekViewProps> = (props) => {
     }, [props.firstDayOfWeek, ctx.setWeekViewConfig]);
 
     return (
-        <div className="week-view" style={{height: "100%", display: "flex", flexDirection: "row"}}>
+        <div className="week-view" id="week-view" style={{height: "100%", display: "flex", flexDirection: "row"}}>
             {timeGridChild}
             <div
                 className="day-view-container"

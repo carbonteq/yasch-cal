@@ -4,13 +4,10 @@ import type {Event as EventProps} from "@/types/calendar.type";
 import type {FC} from "react";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
-import {DateUtils} from "@/utils/date.util";
 import {ReactUtils} from "@/utils/react.utils";
 
 export const Event: FC<EventProps> = (props) => {
     const ctx = useCalendarProvider();
-
-    const PADDING_PX = 16;
 
     useEffect(() => {
         ctx.setEventConfig({
@@ -22,7 +19,7 @@ export const Event: FC<EventProps> = (props) => {
 
     useEffect(() => {
         if (props.events) {
-            const newEvents = props.events.map((event) => {
+            const newEvents = props.events.map((event, index) => {
                 const {id, title, start, end, ...rest} = event;
 
                 return {
@@ -30,6 +27,7 @@ export const Event: FC<EventProps> = (props) => {
                     title,
                     start,
                     end,
+                    index,
                     meta: rest
                 };
             });
@@ -40,17 +38,11 @@ export const Event: FC<EventProps> = (props) => {
 
     return (
         <div className="event">
-            {ctx.events.map((event, index) => {
-                const willTakeMinutes = DateUtils.getTimeDifferenceInMinutes(event.start, event.end);
-                const cardHeight =
-                    (ctx.hourSlotConfig.slotHeight * willTakeMinutes) / 60 - (willTakeMinutes < 60 ? 0 : PADDING_PX);
-
+            {ctx.events.map((event) => {
                 return (
                     <div key={event.id}>
                         {ReactUtils.passExtraPropToChildren(props.children, {
-                            event,
-                            index,
-                            height: cardHeight
+                            event
                         })}
                     </div>
                 );

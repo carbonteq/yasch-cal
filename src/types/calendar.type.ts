@@ -11,6 +11,7 @@ export type WeekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export interface CalendarEvent extends TimeRange {
     id: string;
     title: string;
+    index?: number;
     meta?: Record<string, unknown>;
 }
 
@@ -73,11 +74,6 @@ export interface Event extends PropsWithChildren {
 
 export interface EventItem extends Styling {
     event?: CalendarEvent;
-    index?: number;
-    top?: number;
-    left?: number;
-    width?: number;
-    height?: number;
     onEventClick?: (event: CalendarEvent) => void;
     onEventDrop?: (event: UpdatedCalendarEvent) => void;
     onEventResize?: (event: UpdatedCalendarEvent) => void;
