@@ -4,7 +4,6 @@ import type {Event as EventProps} from "@/types/calendar.type";
 import type {FC} from "react";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
-import {ReactUtils} from "@/utils/react.utils";
 
 export const Event: FC<EventProps> = (props) => {
     const ctx = useCalendarProvider();
@@ -36,17 +35,5 @@ export const Event: FC<EventProps> = (props) => {
         }
     }, [props.events, ctx.setEvents]);
 
-    return (
-        <div className="event">
-            {ctx.events.map((event) => {
-                return (
-                    <div key={event.id}>
-                        {ReactUtils.passExtraPropToChildren(props.children, {
-                            event
-                        })}
-                    </div>
-                );
-            })}
-        </div>
-    );
+    return <div className="event">{props.children}</div>;
 };

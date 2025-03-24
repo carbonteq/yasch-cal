@@ -10,45 +10,33 @@ export const EventItem: FC<EventItemProps> = (props) => {
 
     const PADDING_PX = 0;
 
-    const content =
-        props.render && props.event ? (
-            props.render(props.event)
-        ) : (
-            <>
-                <div className="event-item-title">{props.event?.title}</div>
-            </>
-        );
-
-    const willTakeMinutes = props.event
-        ? DateUtils.getTimeDifferenceInMinutes(props.event?.start, props.event?.end)
-        : 0;
-    const eventHeight =
-        (ctx.hourSlotConfig.slotHeight * willTakeMinutes) / 60 - (willTakeMinutes < 60 ? 0 : PADDING_PX);
-
     const coordinates = ctx.getElementCoordinates(".day-view-container");
 
-    return (
-        props.event && (
+    return ctx.events.map((event) => {
+        const willTakeMinutes = DateUtils.getTimeDifferenceInMinutes(event.start, event.end);
+
+        const eventHeight =
+            (ctx.hourSlotConfig.slotHeight * willTakeMinutes) / 60 - (willTakeMinutes < 60 ? 0 : PADDING_PX);
+
+        const content = props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>;
+
+        return (
             <div
                 className="event-item"
                 style={{
                     position: "absolute",
-                    zIndex: props.event?.index,
-                    // width: props.width,
+                    zIndex: event.index,
+                    // width: width,
                     height: eventHeight,
                     top: CssUtil.calculateTopPosition(
-                        props.event?.start,
+                        event.start,
                         ctx.hourSlotConfig.slotHeight,
                         coordinates?.top ?? 0
                     ),
-                    left: CssUtil.calculateLeftPosition(
-                        props.event?.start,
-                        coordinates?.width ?? 0,
-                        coordinates?.left ?? 0
-                    )
+                    left: CssUtil.calculateLeftPosition(event.start, coordinates?.width ?? 0, coordinates?.left ?? 0)
                 }}>
                 {content}
             </div>
-        )
-    );
+        );
+    });
 };
