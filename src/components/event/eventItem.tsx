@@ -39,7 +39,6 @@ export const EventItem: FC<EventItemProps> = (props) => {
         // Calculate the base left position for the day column
         const dayColumnWidth = hourSlotCoordinates?.width ?? 0;
         const baseLeft = (dayViewContainerCoordinates?.left ?? 0) + dayIndex * dayColumnWidth;
-        console.log("baseLeft", baseLeft);
 
         // Calculate left position based on position in the group
         const leftPercentage = (positionIndex * 100) / totalOverlaps;
