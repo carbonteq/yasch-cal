@@ -11,6 +11,12 @@ export const EventItem: FC<EventItemProps> = (props) => {
     return ctx.events.map((event) => {
         const {width, left} = EventUtils.widthAndLeftofEvent(ctx.events, event);
 
+        const top = CssUtil.calculateTopPosition(
+            event.start,
+            ctx.hourSlotConfig.height ?? 0,
+            CssUtil.getElementCoordinates(".day-view-container")?.top ?? 0
+        );
+
         return (
             <div
                 key={event.id}
@@ -20,11 +26,7 @@ export const EventItem: FC<EventItemProps> = (props) => {
                     zIndex: event.index,
                     width: width,
                     height: EventUtils.height(event, ctx.hourSlotConfig.height ?? 0),
-                    top: CssUtil.calculateTopPosition(
-                        event.start,
-                        ctx.hourSlotConfig.height ?? 0,
-                        CssUtil.getElementCoordinates(".day-view-container")?.top ?? 0
-                    ),
+                    top: top,
                     left: left
                 }}
                 onClick={() => {
@@ -32,7 +34,7 @@ export const EventItem: FC<EventItemProps> = (props) => {
                 }}
                 draggable={true}
                 onDragStart={(e) => {
-                    console.log("drag start", e);
+                    e.dataTransfer.setData("event", JSON.stringify(event));
                 }}
                 onDragEnd={(e) => {
                     console.log("drag end", e);

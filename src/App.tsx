@@ -16,8 +16,8 @@ export const App = () => {
         {
             id: "1",
             title: "E1",
-            start: new Date("2025-03-24T00:00:00"),
-            end: new Date("2025-03-24T00:15:00"),
+            start: new Date("2025-03-23T00:00:00"),
+            end: new Date("2025-03-23T00:15:00"),
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
