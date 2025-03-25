@@ -26,8 +26,8 @@ export interface ICalendarContext {
     timeGridConfig: Required<TimeGrid>;
     setTimeGridConfig: Dispatch<SetStateAction<Required<TimeGrid>>>;
 
-    timeGridSlots: Date[];
-    setTimeGridSlots: Dispatch<SetStateAction<Date[]>>;
+    timeGridSlots: string[];
+    setTimeGridSlots: Dispatch<SetStateAction<string[]>>;
 
     hourSlotConfig: HourSlot;
     setHourSlotConfig: Dispatch<SetStateAction<HourSlot>>;
@@ -37,6 +37,9 @@ export interface ICalendarContext {
 
     events: CalendarEvent[];
     setEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
+
+    currentWeekEvents: CalendarEvent[];
+    setCurrentWeekEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
 }
 export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => {
     const [weekViewConfig, setWeekViewConfig] = useState<WeekView>(Defaults.WEEK_VIEW_CONFIG);
@@ -51,13 +54,15 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
 
     const [timeGridConfig, setTimeGridConfig] = useState<Required<TimeGrid>>(Defaults.TIME_GRID_CONFIG);
 
-    const [timeGridSlots, setTimeGridSlots] = useState<Date[]>([]);
+    const [timeGridSlots, setTimeGridSlots] = useState<string[]>([]);
 
     const [hourSlotConfig, setHourSlotConfig] = useState<HourSlot>(Defaults.HOUR_SLOT_CONFIG);
 
     const [eventConfig, setEventConfig] = useState<Event>(Defaults.EVENT_CONFIG);
 
     const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+    const [currentWeekEvents, setCurrentWeekEvents] = useState<CalendarEvent[]>([]);
 
     return (
         <CalendarContext.Provider
@@ -87,7 +92,10 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
                 setEventConfig,
 
                 events,
-                setEvents
+                setEvents,
+
+                currentWeekEvents,
+                setCurrentWeekEvents
             }}>
             {props.children}
         </CalendarContext.Provider>

@@ -15,15 +15,15 @@ export const DayView: FC<DayViewProps> = (props) => {
     return (
         <div className="day-view">
             {ctx.timeGridSlots.map((slot, index) => {
-                const startStr = slot.toISOString().split("T")[1] as string;
-                const start = new Date(`${(currentDate as Date).toISOString().split("T")[0]}T${startStr}`);
+                const startStr = slot;
+                const start = new Date(`${(currentDate as Date).toISOString().split("T")[0]}T${startStr}.000Z`);
                 const end = DateUtils.addMinutes(start, Defaults.TIME_GRID_INTERVAL);
 
                 return (
                     <div key={index} className="day-view-slot">
                         {ReactUtils.passExtraPropToChildren(props.children, {
-                            start,
-                            end
+                            start: start.toISOString(),
+                            end: end.toISOString()
                         })}
                     </div>
                 );

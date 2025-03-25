@@ -33,6 +33,8 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
                 intervalHeight={intervalHeight}
                 start={props.start}
                 end={props.end}
+                isSlotSelectAllowed={props.isSlotSelectAllowed}
+                onSlotSelect={props.onSlotSelect}
             />
         );
     });
@@ -43,18 +45,6 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
             style={{
                 height: `${ctx.hourSlotConfig.height}px`,
                 position: "relative"
-            }}
-            onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-
-                if (props.start && props.end) {
-                    const timeRange = {start: props.start, end: props.end};
-
-                    if (!props.isSlotSelectAllowed || props.isSlotSelectAllowed(timeRange)) {
-                        props.onSlotSelect?.(timeRange);
-                    }
-                }
             }}>
             {intervalDividers}
         </div>

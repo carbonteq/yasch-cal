@@ -5,6 +5,7 @@ import {Defaults} from "@/constants/default.constant";
 import type {WeekDay, WeekView as WeekViewProps} from "@/types/calendar.type";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
+import {DateUtils} from "@/utils/date.util";
 import {ReactUtils} from "@/utils/react.utils";
 
 import {DayView} from "../dayView";
@@ -22,11 +23,15 @@ export const WeekView: React.FC<WeekViewProps> = (props) => {
     const dayViewChildren = children.filter((child) => ReactUtils.isReactElement(child) && child.type === DayView);
 
     useEffect(() => {
+        const firstDayOfWeek = props.firstDayOfWeek ?? Defaults.WEEK_VIEW_CONFIG.firstDayOfWeek;
+
         ctx.setWeekViewConfig({
             showWeekends: props.showWeekends ?? Defaults.WEEK_VIEW_CONFIG.showWeekends,
-            firstDayOfWeek: props.firstDayOfWeek ?? Defaults.WEEK_VIEW_CONFIG.firstDayOfWeek
+            firstDayOfWeek
         });
-    }, [props.firstDayOfWeek, ctx.setWeekViewConfig]);
+
+        ctx.setSelectedWeek(DateUtils.getWeekDates(new Date(), firstDayOfWeek));
+    }, [props.firstDayOfWeek, ctx.setWeekViewConfig, ctx.setSelectedWeek]);
 
     return (
         <div className="week-view" id="week-view" style={{height: "100%", display: "flex", flexDirection: "row"}}>

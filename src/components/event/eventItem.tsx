@@ -3,16 +3,15 @@ import type {FC} from "react";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
 import {CssUtil} from "@/utils/css.util";
-import {EventUtils} from "@/utils/event.util";
 
 export const EventItem: FC<EventItemProps> = (props) => {
     const ctx = useCalendarProvider();
 
     return ctx.events.map((event) => {
-        const {width, left} = EventUtils.widthAndLeftofEvent(ctx.events, event);
+        const {width, left} = CssUtil.widthAndLeftofEvent(ctx.events, event);
 
         const top = CssUtil.calculateTopPosition(
-            event.start,
+            event,
             ctx.hourSlotConfig.height ?? 0,
             CssUtil.getElementCoordinates(".day-view-container")?.top ?? 0
         );
@@ -25,7 +24,7 @@ export const EventItem: FC<EventItemProps> = (props) => {
                     position: "absolute",
                     zIndex: event.index,
                     width: width,
-                    height: EventUtils.height(event, ctx.hourSlotConfig.height ?? 0),
+                    height: CssUtil.height(event, ctx.hourSlotConfig.height ?? 0),
                     top: top,
                     left: left
                 }}
@@ -36,9 +35,10 @@ export const EventItem: FC<EventItemProps> = (props) => {
                 onDragStart={(e) => {
                     e.dataTransfer.setData("event", JSON.stringify(event));
                 }}
-                onDragEnd={(e) => {
-                    console.log("drag end", e);
-                }}>
+                // onDragEnd={(e) => {
+                //     console.log("drag end", e);
+                // }}
+            >
                 {props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>}
             </div>
         );

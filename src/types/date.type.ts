@@ -8,3 +8,7 @@ export interface ITimeDisplayFormats {
     hour: "2-digit" | "numeric";
     minute: "2-digit" | "numeric";
 }
+
+export type TDateTimeSplit = [string, string, string];
+
+export type TIsoDateTimeSplit = [string, string];

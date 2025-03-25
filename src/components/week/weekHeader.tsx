@@ -10,8 +10,6 @@ import "@/styles/week.style.css";
 
 import {Defaults} from "@/constants/default.constant";
 
-import {DateUtils} from "@/utils/date.util";
-
 export const WeekHeader: React.FC<WeekHeaderProps> = (props) => {
     const ctx = useCalendarProvider();
 
@@ -20,15 +18,7 @@ export const WeekHeader: React.FC<WeekHeaderProps> = (props) => {
             displayFormat: props.displayFormat ?? Defaults.WEEK_HEADER_DISPLAY_FORMAT,
             render: props.render
         });
-
-        ctx.setSelectedWeek(DateUtils.getWeekDates(new Date(), ctx.weekViewConfig.firstDayOfWeek));
-    }, [
-        props.displayFormat,
-        props.render,
-        ctx.setWeekHeaderConfig,
-        ctx.setSelectedWeek,
-        ctx.weekViewConfig.firstDayOfWeek
-    ]);
+    }, [props.displayFormat, props.render, ctx.setWeekHeaderConfig]);
 
     return (
         <div className="week-header">

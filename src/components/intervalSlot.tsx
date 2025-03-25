@@ -1,3 +1,4 @@
+import type {TimeRange} from "@/types/calendar.type";
 import type {FC} from "react";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
@@ -6,8 +7,10 @@ import {DateUtils} from "@/utils/date.util";
 interface IProps {
     index: number;
     intervalHeight: number;
-    start?: Date;
-    end?: Date;
+    start?: string;
+    end?: string;
+    isSlotSelectAllowed?: (timeRange: TimeRange) => boolean;
+    onSlotSelect?: (timeRange: TimeRange) => void;
 }
 export const IntervalSlot: FC<IProps> = (props) => {
     const ctx = useCalendarProvider();
@@ -54,6 +57,18 @@ export const IntervalSlot: FC<IProps> = (props) => {
             }}
             onDragOver={dragoverHandler}
             onDrop={dropHandler}
+            onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+
+                if (props.start && props.end) {
+                    const timeRange = {start: props.start, end: props.end};
+
+                    if (!props.isSlotSelectAllowed || props.isSlotSelectAllowed(timeRange)) {
+                        props.onSlotSelect?.(timeRange);
+                    }
+                }
+            }}
         />
     );
 };

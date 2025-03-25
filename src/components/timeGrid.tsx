@@ -24,16 +24,19 @@ export const TimeGrid: FC<TimeGridProps> = (props) => {
     }, [props.displayFormat, ctx.setTimeGridConfig, props.hourRange, props.showCurrentTimeIndicator]);
 
     const generateTimeSlots = (interval: number = 60) => {
-        const slots: Date[] = [];
+        const slots: string[] = [];
         const [startHour, endHour] = ctx.timeGridConfig.hourRange;
         const slotCount = ((endHour - startHour + 1) * 60) / interval;
 
         for (let i = 0; i < slotCount; i++) {
             const hour = Math.floor((i * interval) / 60) + startHour;
             const minutes = (i * interval) % 60;
-            const time = new Date();
-            time.setHours(hour, minutes, 0, 0);
-            slots.push(time);
+
+            const formattedHour = hour.toString().padStart(2, "0");
+            const formattedMinutes = minutes.toString().padStart(2, "0");
+
+            const timeString = `${formattedHour}:${formattedMinutes}:00`;
+            slots.push(timeString);
         }
 
         return slots;
@@ -52,10 +55,21 @@ export const TimeGrid: FC<TimeGridProps> = (props) => {
                 }}>
                 {ctx.timeGridSlots.map((time, index) => (
                     <div key={index} className="time-grid-marker" style={{height: ctx.hourSlotConfig.height}}>
-                        {time.toLocaleTimeString("en-US", {
-                            hour: ctx.timeGridConfig.displayFormat.hour,
-                            minute: ctx.timeGridConfig.displayFormat.minute
-                        })}
+                        {(() => {
+                            const [hours, minutes] = time.split(":") as [string, string];
+                            const hour = Number(hours);
+                            const minute = Number(minutes);
+
+                            const date = new Date();
+                            date.setHours(hour);
+                            date.setMinutes(minute);
+                            date.setSeconds(0);
+
+                            return date.toLocaleTimeString([], {
+                                hour: ctx.timeGridConfig.displayFormat.hour,
+                                minute: ctx.timeGridConfig.displayFormat.minute
+                            });
+                        })()}
                     </div>
                 ))}
             </div>

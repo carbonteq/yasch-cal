@@ -2,8 +2,8 @@ import type {IDateDisplayFormats, ITimeDisplayFormats} from "@/types/date.type";
 import type {PropsWithChildren} from "react";
 
 export interface TimeRange {
-    start: Date; // ISO date string
-    end: Date; // ISO date string
+    start: string; // ISO date string
+    end: string; // ISO date string
 }
 
 export type WeekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -13,6 +13,24 @@ export interface CalendarEvent extends TimeRange {
     title: string;
     index?: number;
     meta?: Record<string, unknown>;
+    dateAndTime?: {
+        start: {
+            year: string;
+            month: string;
+            day: string;
+            hour: string;
+            minute: string;
+            second: string;
+        };
+        end: {
+            year: string;
+            month: string;
+            day: string;
+            hour: string;
+            minute: string;
+            second: string;
+        };
+    };
 }
 
 export interface UpdatedCalendarEvent extends CalendarEvent {
@@ -58,8 +76,8 @@ export interface DayView extends PropsWithChildren {
 }
 
 export interface HourSlot extends Styling {
-    start?: Date;
-    end?: Date;
+    start?: string;
+    end?: string;
     height?: number;
     interval?: number;
     onSlotSelect?: (slot: TimeRange) => void;

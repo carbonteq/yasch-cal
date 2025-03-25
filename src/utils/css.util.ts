@@ -1,45 +1,6 @@
-/**
- * Calculates the top position of an event
- * @param eventStart - The start date of the event
- * @param slotHeight - The height of the slot
- * @param distanceFromTop - The distance from the top of the calendar
- * @returns The top position of the event
- */
-const calculateTopPosition = (eventStart: Date, slotHeight: number, distanceFromTop: number) => {
-    // For the start position, we need to calculate minutes since midnight
-    const hours = eventStart.getHours();
-    const minutes = eventStart.getMinutes();
+import type {CalendarEvent} from "@/types/calendar.type";
 
-    // Total minutes since midnight
-    const totalMinutes = hours * 60 + minutes;
-
-    // Convert to pixels (each hour is slotHeight pixels tall)
-    const top = distanceFromTop + (totalMinutes / 60) * slotHeight;
-
-    return top;
-};
-
-/**
- * Calculates the left position of an event
- * @param eventStart - The start date of the event
- * @param calendarWidth - The width of the calendar
- * @param distanceFromLeft - The distance from the left of the calendar
- * @returns The left position of the event
- */
-const calculateLeftPosition = (eventStart: Date, calendarWidth: number, distanceFromLeft: number) => {
-    // Default column width - assuming 7 equal columns for days of the week
-    // You would need to know the total width of the calendar grid
-    // Let's assume each day column has equal width
-    const dayColumnWidth = calendarWidth / 7; // For 7 days
-
-    // Determine which day of the week the event is on (0-6)
-    const dayOfWeek = eventStart.getDay(); // 0 = Sunday, 1 = Monday, etc.
-
-    // Calculate left position based on day of week
-    const left = distanceFromLeft + dayOfWeek * dayColumnWidth;
-
-    return left;
-};
+import {DateUtils} from "./date.util";
 
 /**
  * Gets the coordinates of an element
@@ -58,8 +19,73 @@ const getElementCoordinates = (elementId: string) => {
     return rect;
 };
 
+/**
+ * Calculates the top position of an event
+ * @param eventStart - The start date of the event
+ * @param slotHeight - The height of the slot
+ * @param distanceFromTop - The distance from the top of the calendar
+ * @returns The top position of the event
+ */
+const calculateTopPosition = (event: CalendarEvent, slotHeight: number, distanceFromTop: number) => {
+    // For the start position, we need to calculate minutes since midnight
+
+    const hours = Number(event.dateAndTime?.start.hour);
+    const minutes = Number(event.dateAndTime?.start.minute);
+
+    // Total minutes since midnight
+    const totalMinutes = hours * 60 + minutes;
+
+    // Convert to pixels (each hour is slotHeight pixels tall)
+    const top = distanceFromTop + (totalMinutes / 60) * slotHeight;
+
+    return top;
+};
+
+const widthAndLeftofEvent = (events: CalendarEvent[], event: CalendarEvent) => {
+    const eventStart = event.start;
+    const eventEnd = event.end;
+    const hourSlotCoordinates = CssUtil.getElementCoordinates(".hour-slot");
+    const dayViewContainerCoordinates = CssUtil.getElementCoordinates(".day-view-container");
+
+    // Find events that overlap with the current event
+    const overlappingEvents = events.filter((e) => e.start < eventEnd && e.end > eventStart);
+
+    // Total number of overlapping events
+    const totalOverlaps = overlappingEvents.length;
+
+    // Position index - where this event appears in the group
+    const positionIndex = overlappingEvents.findIndex((e) => e.id === event.id);
+
+    // Calculate width based on position + 1 (not total overlaps)
+    // First event gets full width, second half width, third 1/3 width, etc.
+    const widthInPixels = (hourSlotCoordinates?.width ?? 0) / (positionIndex + 1);
+    const width = `${widthInPixels}px`;
+
+    const dayIndex = new Date(eventStart).getDay(); // 0 for Sunday, 1 for Monday, etc.
+
+    // Calculate the base left position for the day column
+    const dayColumnWidth = hourSlotCoordinates?.width ?? 0;
+    const baseLeft = (dayViewContainerCoordinates?.left ?? 0) + dayIndex * dayColumnWidth;
+
+    // Calculate left position based on position in the group
+    const leftPercentage = (positionIndex * 100) / totalOverlaps;
+    const left = dayViewContainerCoordinates?.left
+        ? baseLeft + (leftPercentage / 100) * (hourSlotCoordinates?.width ?? 0)
+        : 0;
+
+    return {width, left};
+};
+
+const height = (event: CalendarEvent, slotHeight: number) => {
+    const willTakeMinutes = DateUtils.getTimeDifferenceInMinutes(new Date(event.start), new Date(event.end));
+
+    return (slotHeight * willTakeMinutes) / 60;
+    // - (willTakeMinutes < 60 ? 0 : PADDING_PX);
+};
+
 export const CssUtil = {
     calculateTopPosition,
-    calculateLeftPosition,
-    getElementCoordinates
+    getElementCoordinates,
+    widthAndLeftofEvent,
+    height
 };

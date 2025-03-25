@@ -23,7 +23,7 @@ export const Toolbar: FC<ToolbarProps> = (props) => {
                     className="toolbar-button-previous"
                     onClick={() => {
                         const previousWeek = DateUtils.addDays(ctx.selectedWeek[0]!, -1);
-                        ctx.setSelectedWeek(DateUtils.getWeekDates(previousWeek));
+                        ctx.setSelectedWeek(DateUtils.getWeekDates(previousWeek, ctx.weekViewConfig.firstDayOfWeek));
 
                         props.onPreviousClick?.();
                     }}>
@@ -33,7 +33,7 @@ export const Toolbar: FC<ToolbarProps> = (props) => {
                     className="toolbar-button-next"
                     onClick={() => {
                         const nextWeek = DateUtils.addDays(ctx.selectedWeek[6]!, 1);
-                        ctx.setSelectedWeek(DateUtils.getWeekDates(nextWeek));
+                        ctx.setSelectedWeek(DateUtils.getWeekDates(nextWeek, ctx.weekViewConfig.firstDayOfWeek));
 
                         props.onNextClick?.();
                     }}>
