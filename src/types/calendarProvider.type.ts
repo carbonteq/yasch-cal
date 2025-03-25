@@ -1,4 +1,4 @@
-import type {CalendarEvent, ExternalDragEvent, TimeRange, UpdatedCalendarEvent, WeekDay} from "./calendar.type";
+import type {CalendarEvent, ExternalDragEvent, TimeRange, WeekDay} from "./calendar.type";
 
 export interface CalendarContextValue {
     // State
@@ -16,7 +16,7 @@ export interface CalendarContextValue {
     goToPrevious: () => void;
     changeView: (view: "day" | "week" | "month") => void;
     addEvent: (event: CalendarEvent) => void;
-    updateEvent: (event: UpdatedCalendarEvent) => void;
+    updateEvent: (event: CalendarEvent) => void;
     deleteEvent: (eventId: string) => void;
     selectSlot: (slot: TimeRange) => void;
     selectEvent: (event: CalendarEvent) => void;

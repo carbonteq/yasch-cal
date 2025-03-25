@@ -90,9 +90,13 @@ export const App = () => {
             </WeekView>
             <Event events={sampleEvents}>
                 <EventItem
-                // onEventClick={(event) => {
-                //     console.log("event", event.title);
-                // }}
+                    // onEventClick={(event) => {
+                    //     console.log("event", event.title);
+                    // }}
+
+                    onEventDrop={(event) => {
+                        console.log("event", event);
+                    }}
                 />
             </Event>
         </Calendar>

@@ -34,11 +34,7 @@ export const EventItem: FC<EventItemProps> = (props) => {
                 draggable={true}
                 onDragStart={(e) => {
                     e.dataTransfer.setData("event", JSON.stringify(event));
-                }}
-                // onDragEnd={(e) => {
-                //     console.log("drag end", e);
-                // }}
-            >
+                }}>
                 {props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>}
             </div>
         );

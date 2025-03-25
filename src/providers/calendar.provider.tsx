@@ -2,7 +2,7 @@ import {useState} from "react";
 
 import {Defaults} from "@/constants/default.constant";
 
-import type {CalendarEvent, Event, HourSlot, TimeGrid, WeekHeader, WeekView} from "@/types/calendar.type";
+import type {CalendarEvent, Event, HourSlot, TimeGrid, TimeRange, WeekHeader, WeekView} from "@/types/calendar.type";
 import type {TDateTimeSplit, TIsoDateTimeSplit} from "@/types/date.type";
 import type {Dispatch, PropsWithChildren, SetStateAction} from "react";
 
@@ -10,6 +10,25 @@ import {CalendarContext} from "@/contexts/calendar.context";
 import {DateUtils} from "@/utils/date.util";
 
 interface IProps {}
+
+type dateAndTime = {
+    start: {
+        year: string;
+        month: string;
+        day: string;
+        hour: string;
+        minute: string;
+        second: string;
+    };
+    end: {
+        year: string;
+        month: string;
+        day: string;
+        hour: string;
+        minute: string;
+        second: string;
+    };
+};
 
 export interface ICalendarContext {
     weekViewConfig: WeekView;
@@ -42,26 +61,18 @@ export interface ICalendarContext {
     currentWeekEvents: CalendarEvent[];
     setCurrentWeekEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
 
-    setEventDateTime: (event: CalendarEvent) => {
-        start: {
-            year: string;
-            month: string;
-            day: string;
-            hour: string;
-            minute: string;
-            second: string;
-        };
-        end: {
-            year: string;
-            month: string;
-            day: string;
-            hour: string;
-            minute: string;
-            second: string;
-        };
-    };
+    onIntervalSlotClick: (params: {
+        start?: string;
+        index: number;
+        isSlotSelectAllowed?: (timeRange: TimeRange) => boolean;
+        onSlotSelect?: (timeRange: TimeRange) => void;
+    }) => void;
+
+    setEventDateTime: (event: CalendarEvent) => dateAndTime;
 
     filterEventsForCurrentWeek: (events: CalendarEvent[], selectedWeek: string[]) => CalendarEvent[];
+
+    dropHandler: (e: React.DragEvent<HTMLDivElement>, start: string, index: number) => CalendarEvent;
 }
 export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => {
     const [weekViewConfig, setWeekViewConfig] = useState<WeekView>(Defaults.WEEK_VIEW_CONFIG);
@@ -134,6 +145,61 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
         return currentWeekEvents;
     };
 
+    const dropHandler = (e: React.DragEvent<HTMLDivElement>, start: string, index: number) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const event = JSON.parse(e.dataTransfer.getData("event"));
+
+        const currentSlotTimeStart = new Date(start);
+        currentSlotTimeStart.setMinutes(currentSlotTimeStart.getMinutes() + index * (hourSlotConfig.interval ?? 60));
+        const currentSlotTimeEnd = new Date(currentSlotTimeStart);
+        currentSlotTimeEnd.setMinutes(
+            currentSlotTimeEnd.getMinutes() +
+                DateUtils.getTimeDifferenceInMinutes(new Date(event.start), new Date(event.end))
+        );
+
+        const newEvents = [...events];
+        const toBeUpdatedEvent = newEvents.find((prevEvent) => prevEvent.id === event.id) as CalendarEvent;
+
+        toBeUpdatedEvent.start = currentSlotTimeStart.toISOString();
+        toBeUpdatedEvent.end = currentSlotTimeEnd.toISOString();
+        toBeUpdatedEvent.dateAndTime = setEventDateTime(toBeUpdatedEvent);
+
+        setEvents(newEvents);
+
+        const newSelectedEvents = [...currentWeekEvents];
+        const selectedEventIndex = newSelectedEvents.findIndex((prevEvent) => prevEvent.id === event.id);
+
+        if (selectedEventIndex !== -1) {
+            newSelectedEvents[selectedEventIndex] = toBeUpdatedEvent;
+        }
+
+        setCurrentWeekEvents(newSelectedEvents);
+
+        return toBeUpdatedEvent;
+    };
+
+    const onIntervalSlotClick = (params: {
+        start?: string;
+        index: number;
+        isSlotSelectAllowed?: (timeRange: TimeRange) => boolean;
+        onSlotSelect?: (timeRange: TimeRange) => void;
+    }) => {
+        if (params.start) {
+            const intervalStart = new Date(params.start);
+            intervalStart.setMinutes(intervalStart.getMinutes() + params.index * (hourSlotConfig.interval ?? 60));
+
+            const intervalEnd = new Date(intervalStart);
+            intervalEnd.setMinutes(intervalEnd.getMinutes() + (hourSlotConfig.interval ?? 60));
+
+            const timeRange = {start: intervalStart.toISOString(), end: intervalEnd.toISOString()};
+
+            if (!params.isSlotSelectAllowed || params.isSlotSelectAllowed(timeRange)) {
+                params.onSlotSelect?.(timeRange);
+            }
+        }
+    };
+
     return (
         <CalendarContext.Provider
             value={{
@@ -167,9 +233,13 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
                 currentWeekEvents,
                 setCurrentWeekEvents,
 
+                onIntervalSlotClick,
+
                 setEventDateTime,
 
-                filterEventsForCurrentWeek
+                filterEventsForCurrentWeek,
+
+                dropHandler
             }}>
             {props.children}
         </CalendarContext.Provider>

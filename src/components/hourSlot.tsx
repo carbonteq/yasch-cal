@@ -26,17 +26,7 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
     const intervalDividers = Array.from({length: intervalCount}, (_, index) => {
         const intervalHeight = (ctx.hourSlotConfig.height ?? 0) / intervalCount;
 
-        return (
-            <IntervalSlot
-                key={`interval-${index}`}
-                index={index}
-                intervalHeight={intervalHeight}
-                start={props.start}
-                end={props.end}
-                isSlotSelectAllowed={props.isSlotSelectAllowed}
-                onSlotSelect={props.onSlotSelect}
-            />
-        );
+        return <IntervalSlot key={`interval-${index}`} index={index} intervalHeight={intervalHeight} {...props} />;
     });
 
     return (

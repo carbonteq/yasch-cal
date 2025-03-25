@@ -33,11 +33,6 @@ export interface CalendarEvent extends TimeRange {
     };
 }
 
-export interface UpdatedCalendarEvent extends CalendarEvent {
-    updatedStart: string;
-    updatedEnd: string;
-}
-
 export interface ExternalDragEvent extends CalendarEvent {
     draggedElement: HTMLElement;
 }
@@ -92,8 +87,8 @@ export interface Event extends PropsWithChildren {
 
 export interface EventItem extends Styling {
     onEventClick?: (event: CalendarEvent) => void;
-    onEventDrop?: (event: UpdatedCalendarEvent) => void;
-    onEventResize?: (event: UpdatedCalendarEvent) => void;
+    onEventDrop?: (event: CalendarEvent) => void;
+    onEventResize?: (event: CalendarEvent) => void;
 
     // validations
     isEventOverlapAllowed?: (existing: CalendarEvent, moving: CalendarEvent) => boolean;
