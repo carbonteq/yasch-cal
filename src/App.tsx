@@ -80,6 +80,7 @@ export const App = () => {
                 <TimeGrid />
                 <DayView>
                     <HourSlot
+                        height={100}
                         interval={15}
                         onSlotSelect={(slot) => {
                             console.log("slotTime", slot);
