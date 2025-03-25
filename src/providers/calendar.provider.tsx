@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useState} from "react";
 
 import {Defaults} from "@/constants/default.constant";
 
@@ -13,7 +13,7 @@ import type {
     WeekView
 } from "@/types/calendar.type";
 import type {TDateTimeSplit, TIsoDateTimeSplit} from "@/types/date.type";
-import type {Dispatch, PropsWithChildren, RefObject, SetStateAction} from "react";
+import type {Dispatch, PropsWithChildren, SetStateAction} from "react";
 
 import {CalendarContext} from "@/contexts/calendar.context";
 import {DateUtils} from "@/utils/date.util";
@@ -40,8 +40,6 @@ type dateAndTime = {
 };
 
 export interface ICalendarContext {
-    resizeRef: RefObject<HTMLDivElement | null>;
-
     weekViewConfig: WeekView;
     setWeekViewConfig: Dispatch<SetStateAction<WeekView>>;
 
@@ -96,8 +94,6 @@ export interface ICalendarContext {
     }) => void;
 }
 export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => {
-    const resizeRef = useRef<HTMLDivElement>(null);
-
     const [weekViewConfig, setWeekViewConfig] = useState<WeekView>(Defaults.WEEK_VIEW_CONFIG);
 
     const [weekHeaderConfig, setWeekHeaderConfig] = useState<WeekHeader>(Defaults.WEEK_HEADER_CONFIG);
@@ -315,8 +311,6 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
     return (
         <CalendarContext.Provider
             value={{
-                resizeRef,
-
                 weekViewConfig,
                 setWeekViewConfig,
 

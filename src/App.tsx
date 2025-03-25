@@ -32,8 +32,8 @@ export const App = () => {
         {
             id: "3",
             title: "E3",
-            start: "2025-03-26T23:00:00.000Z",
-            end: "2025-03-26T23:45:00.000Z",
+            start: "2025-03-24T00:00:00.000Z",
+            end: "2025-03-24T01:45:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
@@ -83,7 +83,7 @@ export const App = () => {
                         height={100}
                         interval={15}
                         onSlotSelect={(slot) => {
-                            console.log("slotTime", slot);
+                            console.log("slotTime", slot.start, slot.end);
                         }}
                     />
                 </DayView>

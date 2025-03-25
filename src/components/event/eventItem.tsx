@@ -55,7 +55,6 @@ export const EventItem: FC<EventItemProps> = (props) => {
                 {props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>}
                 {isResizeAllowed && (
                     <div
-                        ref={ctx.resizeRef}
                         className="event-resize-handle"
                         onMouseDown={(e) =>
                             ctx.handleResize({
