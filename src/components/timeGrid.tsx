@@ -1,5 +1,3 @@
-import "@/styles/timegrid.style.css";
-
 import {useEffect} from "react";
 
 import {Defaults} from "@/constants/default.constant";

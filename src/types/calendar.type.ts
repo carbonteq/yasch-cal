@@ -63,7 +63,7 @@ export interface Toolbar extends Styling, PropsWithChildren {
 
 export interface WeekHeader {
     displayFormat?: IDateDisplayFormats;
-    render?: (date: Date) => React.ReactNode;
+    render?: (date: string) => React.ReactNode;
 }
 
 export interface WeekView extends PropsWithChildren {
@@ -87,7 +87,7 @@ export interface HourSlot extends Styling {
 export interface Event extends PropsWithChildren {
     minEventDuration?: number;
     maxEventDuration?: number;
-    events: CalendarEvent[];
+    events?: CalendarEvent[];
 }
 
 export interface EventItem extends Styling {

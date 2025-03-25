@@ -16,7 +16,7 @@ export const DayView: FC<DayViewProps> = (props) => {
         <div className="day-view">
             {ctx.timeGridSlots.map((slot, index) => {
                 const startStr = slot;
-                const start = new Date(`${(currentDate as Date).toISOString().split("T")[0]}T${startStr}.000Z`);
+                const start = new Date(`${currentDate}T${startStr}.000Z`);
                 const end = DateUtils.addMinutes(start, Defaults.TIME_GRID_INTERVAL);
 
                 return (

@@ -18,8 +18,8 @@ export interface ICalendarContext {
     weekHeaderConfig: WeekHeader;
     setWeekHeaderConfig: Dispatch<SetStateAction<WeekHeader>>;
 
-    selectedWeek: Date[];
-    setSelectedWeek: Dispatch<SetStateAction<Date[]>>;
+    selectedWeek: string[];
+    setSelectedWeek: Dispatch<SetStateAction<string[]>>;
 
     currentTime: Date;
     setCurrentTime: Dispatch<SetStateAction<Date>>;
@@ -61,14 +61,14 @@ export interface ICalendarContext {
         };
     };
 
-    filterEventsForCurrentWeek: (events: CalendarEvent[], selectedWeek: Date[]) => CalendarEvent[];
+    filterEventsForCurrentWeek: (events: CalendarEvent[], selectedWeek: string[]) => CalendarEvent[];
 }
 export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => {
     const [weekViewConfig, setWeekViewConfig] = useState<WeekView>(Defaults.WEEK_VIEW_CONFIG);
 
     const [weekHeaderConfig, setWeekHeaderConfig] = useState<WeekHeader>(Defaults.WEEK_HEADER_CONFIG);
 
-    const [selectedWeek, setSelectedWeek] = useState(
+    const [selectedWeek, setSelectedWeek] = useState<string[]>(
         DateUtils.getWeekDates(new Date(), Defaults.WEEK_VIEW_CONFIG.firstDayOfWeek)
     );
 
@@ -115,7 +115,7 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
         };
     };
 
-    const filterEventsForCurrentWeek = (events: CalendarEvent[], selectedWeek: Date[]) => {
+    const filterEventsForCurrentWeek = (events: CalendarEvent[], selectedWeek: string[]) => {
         const currentWeekEvents = events.filter((event) => {
             const eventDate = new Date(event.start);
 

@@ -1,14 +1,12 @@
 import React, {useEffect} from "react";
 
+import {Defaults} from "@/constants/default.constant";
+
 import type {WeekHeader as WeekHeaderProps} from "@/types/calendar.type";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
 
 import {WeekHeaderCell} from "./weekHeaderCell";
-
-import "@/styles/week.style.css";
-
-import {Defaults} from "@/constants/default.constant";
 
 export const WeekHeader: React.FC<WeekHeaderProps> = (props) => {
     const ctx = useCalendarProvider();

@@ -1,4 +1,4 @@
-import type {TimeRange} from "@/types/calendar.type";
+import type {CalendarEvent, TimeRange} from "@/types/calendar.type";
 import type {FC} from "react";
 
 import {useCalendarProvider} from "@/contexts/calendar.context";
@@ -34,17 +34,33 @@ export const IntervalSlot: FC<IProps> = (props) => {
                 DateUtils.getTimeDifferenceInMinutes(new Date(event.start), new Date(event.end))
         );
 
-        const newEvent = {
-            ...event,
-            start: currentSlotTimeStart,
-            end: currentSlotTimeEnd
-        };
+        const newEvents = [...ctx.events];
+        const eventIndex = newEvents.findIndex((prevEvent) => prevEvent.id === event.id);
 
-        ctx.setEvents((prev) => {
-            const updatedEvents = prev.map((prevEvent) => (prevEvent.id === event.id ? newEvent : prevEvent));
+        if (eventIndex !== -1) {
+            const currentEvent = newEvents[eventIndex] as CalendarEvent;
 
-            return updatedEvents;
-        });
+            currentEvent.start = currentSlotTimeStart.toISOString();
+            currentEvent.end = currentSlotTimeEnd.toISOString();
+            currentEvent.dateAndTime = ctx.setEventDateTime(currentEvent);
+        }
+
+        ctx.setEvents(newEvents);
+
+        const newSelectedEvents = [...ctx.currentWeekEvents];
+        const selectedEventIndex = newSelectedEvents.findIndex((prevEvent) => prevEvent.id === event.id);
+
+        if (selectedEventIndex !== -1) {
+            newSelectedEvents[selectedEventIndex] = newSelectedEvents[selectedEventIndex] as CalendarEvent;
+
+            newSelectedEvents[selectedEventIndex].start = currentSlotTimeStart.toISOString();
+            newSelectedEvents[selectedEventIndex].end = currentSlotTimeEnd.toISOString();
+            newSelectedEvents[selectedEventIndex].dateAndTime = ctx.setEventDateTime(
+                newSelectedEvents[selectedEventIndex]
+            );
+        }
+
+        ctx.setCurrentWeekEvents(newSelectedEvents);
     };
 
     return (

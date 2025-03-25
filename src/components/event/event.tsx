@@ -11,10 +11,9 @@ export const Event: FC<EventProps> = (props) => {
     useEffect(() => {
         ctx.setEventConfig({
             maxEventDuration: props.maxEventDuration ?? ctx.eventConfig.maxEventDuration,
-            minEventDuration: props.minEventDuration ?? ctx.eventConfig.minEventDuration,
-            events: props.events ?? ctx.eventConfig.events
+            minEventDuration: props.minEventDuration ?? ctx.eventConfig.minEventDuration
         });
-    }, [props.events, props.maxEventDuration, props.minEventDuration, ctx.setEventConfig]);
+    }, [props.maxEventDuration, props.minEventDuration, ctx.setEventConfig]);
 
     useEffect(() => {
         if (props.events) {

@@ -1,5 +1,3 @@
-import "@/styles/toolbar.style.css";
-
 import type {Toolbar as ToolbarProps} from "@/types/calendar.type";
 import type {FC} from "react";
 
@@ -22,7 +20,7 @@ export const Toolbar: FC<ToolbarProps> = (props) => {
                 <button
                     className="toolbar-button-previous"
                     onClick={() => {
-                        const previousWeek = DateUtils.addDays(ctx.selectedWeek[0]!, -1);
+                        const previousWeek = DateUtils.addDays(new Date(`${ctx.selectedWeek[0]!}T00:00:00.000Z`), -1);
                         const newSelectedWeek = DateUtils.getWeekDates(previousWeek, ctx.weekViewConfig.firstDayOfWeek);
 
                         ctx.setSelectedWeek(newSelectedWeek);
@@ -36,7 +34,7 @@ export const Toolbar: FC<ToolbarProps> = (props) => {
                 <button
                     className="toolbar-button-next"
                     onClick={() => {
-                        const nextWeek = DateUtils.addDays(ctx.selectedWeek[6]!, 1);
+                        const nextWeek = DateUtils.addDays(new Date(`${ctx.selectedWeek[6]!}T00:00:00.000Z`), 1);
                         const newSelectedWeek = DateUtils.getWeekDates(nextWeek, ctx.weekViewConfig.firstDayOfWeek);
 
                         ctx.setSelectedWeek(newSelectedWeek);

@@ -3,7 +3,7 @@
  * @param date - Date to format
  * @returns Formatted date string
  */
-const formatToISO = (date: Date) => {
+const formatDateToISO = (date: Date) => {
     const isoString = date.toISOString();
 
     return isoString.split("T")[0] ?? "";
@@ -82,14 +82,14 @@ const getWeekRange = (date: Date, startDay: number = 1) => {
  * Gets an array of dates between start and end dates (inclusive)
  * @param start - Start date
  * @param end - End date
- * @returns Array of dates
+ * @returns Array of dates in ISO format
  */
 const getDatesInRange = (start: Date, end: Date) => {
-    const dates: Date[] = [];
+    const dates: string[] = [];
     const currentDate = new Date(start);
 
     while (currentDate <= end) {
-        dates.push(new Date(currentDate));
+        dates.push(formatDateToISO(new Date(currentDate)));
         currentDate.setDate(currentDate.getDate() + 1);
     }
 
@@ -121,10 +121,10 @@ const getTimeDifferenceInMinutes = (start: Date, end: Date) => {
 };
 
 export const DateUtils = {
+    formatDateToISO,
     getWeekRange,
     getDatesInRange,
     getWeekDates,
-    formatToISO,
     addDays,
     addMinutes,
     formatDateTime,
