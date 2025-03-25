@@ -90,11 +90,10 @@ export const App = () => {
             </WeekView>
             <Event events={sampleEvents}>
                 <EventItem
-                    // onEventClick={(event) => {
-                    //     console.log("event", event.title);
-                    // }}
-
-                    onEventDrop={(event) => {
+                    onEventClick={(event) => {
+                        console.log("event", event.title);
+                    }}
+                    onEventDragEnd={(event) => {
                         console.log("event", event);
                     }}
                 />

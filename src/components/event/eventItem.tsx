@@ -1,3 +1,5 @@
+import {useEffect} from "react";
+
 import type {EventItem as EventItemProps} from "@/types/calendar.type";
 import type {FC} from "react";
 
@@ -7,6 +9,10 @@ import {CssUtil} from "@/utils/css.util";
 export const EventItem: FC<EventItemProps> = (props) => {
     const ctx = useCalendarProvider();
 
+    useEffect(() => {
+        ctx.setEventItemConfig(props);
+    }, [props, ctx.setEventItemConfig]);
+
     return ctx.currentWeekEvents.map((event) => {
         const {width, left} = CssUtil.widthAndLeftofEvent(ctx.events, event);
 
@@ -15,6 +21,10 @@ export const EventItem: FC<EventItemProps> = (props) => {
             ctx.hourSlotConfig.height ?? 0,
             CssUtil.getElementCoordinates(".day-view-container")?.top ?? 0
         );
+
+        const isDragAllowed = ctx.eventItemConfig.isEventDragAllowed
+            ? ctx.eventItemConfig.isEventDragAllowed(event)
+            : true;
 
         return (
             <div
@@ -26,12 +36,13 @@ export const EventItem: FC<EventItemProps> = (props) => {
                     width: width,
                     height: CssUtil.height(event, ctx.hourSlotConfig.height ?? 0),
                     top: top,
-                    left: left
+                    left: left,
+                    cursor: isDragAllowed ? "grab" : "default"
                 }}
                 onClick={() => {
                     props.onEventClick?.(event);
                 }}
-                draggable={true}
+                draggable={isDragAllowed}
                 onDragStart={(e) => {
                     e.dataTransfer.setData("event", JSON.stringify(event));
                 }}>

@@ -32,7 +32,7 @@ export const IntervalSlot: FC<IProps> = (props) => {
             onDrop={(e) => {
                 const newEvent = ctx.dropHandler(e, props.start ?? new Date().toISOString(), props.index);
 
-                e.dataTransfer.setData("event", JSON.stringify(newEvent));
+                ctx.eventItemConfig.onEventDragEnd?.(newEvent);
             }}
             onClick={(e) => {
                 e.stopPropagation();

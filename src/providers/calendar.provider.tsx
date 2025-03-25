@@ -2,7 +2,16 @@ import {useState} from "react";
 
 import {Defaults} from "@/constants/default.constant";
 
-import type {CalendarEvent, Event, HourSlot, TimeGrid, TimeRange, WeekHeader, WeekView} from "@/types/calendar.type";
+import type {
+    CalendarEvent,
+    Event,
+    EventItem,
+    HourSlot,
+    TimeGrid,
+    TimeRange,
+    WeekHeader,
+    WeekView
+} from "@/types/calendar.type";
 import type {TDateTimeSplit, TIsoDateTimeSplit} from "@/types/date.type";
 import type {Dispatch, PropsWithChildren, SetStateAction} from "react";
 
@@ -58,6 +67,9 @@ export interface ICalendarContext {
     events: CalendarEvent[];
     setEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
 
+    eventItemConfig: EventItem;
+    setEventItemConfig: Dispatch<SetStateAction<EventItem>>;
+
     currentWeekEvents: CalendarEvent[];
     setCurrentWeekEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
 
@@ -92,6 +104,8 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
     const [hourSlotConfig, setHourSlotConfig] = useState<HourSlot>(Defaults.HOUR_SLOT_CONFIG);
 
     const [eventConfig, setEventConfig] = useState<Event>(Defaults.EVENT_CONFIG);
+
+    const [eventItemConfig, setEventItemConfig] = useState<EventItem>({});
 
     const [events, setEvents] = useState<CalendarEvent[]>([]);
 
@@ -229,6 +243,9 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
 
                 events,
                 setEvents,
+
+                eventItemConfig,
+                setEventItemConfig,
 
                 currentWeekEvents,
                 setCurrentWeekEvents,
