@@ -1,5 +1,7 @@
 import {useEffect} from "react";
 
+import {IntervalSlot} from "@/components/intervalSlot";
+
 import {Defaults} from "@/constants/default.constant";
 
 import type {HourSlot as HourSlotProps} from "@/types/calendar.type";
@@ -21,21 +23,10 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
     const intervalCount = 60 / (ctx.hourSlotConfig.interval ?? 60);
 
     // Generate interval dividers
-    const intervalDividers = Array.from({length: intervalCount - 1}, (_, index) => {
+    const intervalDividers = Array.from({length: intervalCount}, (_, index) => {
         const intervalHeight = (ctx.hourSlotConfig.height ?? 0) / intervalCount;
 
-        return (
-            <div
-                key={`interval-${index}`}
-                className="hour-slot-interval"
-                style={{
-                    position: "absolute",
-                    width: "100%",
-                    borderBottom: "1px dashed #e0e0e0",
-                    top: `${intervalHeight * (index + 1)}px`
-                }}
-            />
-        );
+        return <IntervalSlot key={`interval-${index}`} index={index} intervalHeight={intervalHeight} />;
     });
 
     return (

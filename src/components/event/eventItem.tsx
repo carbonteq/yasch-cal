@@ -15,7 +15,6 @@ export const EventItem: FC<EventItemProps> = (props) => {
             <div
                 key={event.id}
                 className="event-item"
-                draggable={true}
                 style={{
                     position: "absolute",
                     zIndex: event.index,
@@ -30,6 +29,13 @@ export const EventItem: FC<EventItemProps> = (props) => {
                 }}
                 onClick={() => {
                     props.onEventClick?.(event);
+                }}
+                draggable={true}
+                onDragStart={(e) => {
+                    console.log("drag start", e);
+                }}
+                onDragEnd={(e) => {
+                    console.log("drag end", e);
                 }}>
                 {props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>}
             </div>

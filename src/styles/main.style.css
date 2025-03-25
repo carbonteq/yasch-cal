@@ -12,3 +12,11 @@
     border: 1px solid blue;
     background-color: aliceblue;
 }
+
+.hour-slot-interval {
+    border: 1px dashed #e0e0e0;
+}
+
+.hour-slot-interval:hover {
+    background-color: lavender;
+}
