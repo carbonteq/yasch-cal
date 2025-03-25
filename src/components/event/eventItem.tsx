@@ -7,7 +7,7 @@ import {CssUtil} from "@/utils/css.util";
 export const EventItem: FC<EventItemProps> = (props) => {
     const ctx = useCalendarProvider();
 
-    return ctx.events.map((event) => {
+    return ctx.currentWeekEvents.map((event) => {
         const {width, left} = CssUtil.widthAndLeftofEvent(ctx.events, event);
 
         const top = CssUtil.calculateTopPosition(

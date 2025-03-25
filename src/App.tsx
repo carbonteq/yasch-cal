@@ -41,16 +41,16 @@ export const App = () => {
         {
             id: "4",
             title: "E4",
-            start: "2025-03-24T00:00:00.000Z",
-            end: "2025-03-24T00:30:00.000Z",
+            start: "2025-03-22T00:00:00.000Z",
+            end: "2025-03-22T00:30:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
         {
             id: "5",
             title: "E5",
-            start: "2025-03-24T00:00:00.000Z",
-            end: "2025-03-24T00:30:00.000Z",
+            start: "2025-03-31T00:00:00.000Z",
+            end: "2025-03-31T00:30:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
