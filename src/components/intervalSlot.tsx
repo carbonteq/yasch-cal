@@ -61,8 +61,16 @@ export const IntervalSlot: FC<IProps> = (props) => {
                 e.stopPropagation();
                 e.preventDefault();
 
-                if (props.start && props.end) {
-                    const timeRange = {start: props.start, end: props.end};
+                if (props.start) {
+                    const intervalStart = new Date(props.start);
+                    intervalStart.setMinutes(
+                        intervalStart.getMinutes() + props.index * (ctx.hourSlotConfig.interval ?? 60)
+                    );
+
+                    const intervalEnd = new Date(intervalStart);
+                    intervalEnd.setMinutes(intervalEnd.getMinutes() + (ctx.hourSlotConfig.interval ?? 60));
+
+                    const timeRange = {start: intervalStart.toISOString(), end: intervalEnd.toISOString()};
 
                     if (!props.isSlotSelectAllowed || props.isSlotSelectAllowed(timeRange)) {
                         props.onSlotSelect?.(timeRange);

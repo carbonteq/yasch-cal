@@ -83,7 +83,7 @@ export const App = () => {
                         height={100}
                         interval={15}
                         onSlotSelect={(slot) => {
-                            console.log("slotTime", slot.start);
+                            console.log("slotTime", slot);
                         }}
                     />
                 </DayView>
