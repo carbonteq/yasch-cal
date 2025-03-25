@@ -12,14 +12,15 @@ export const HourSlot: FC<HourSlotProps> = (props) => {
 
     useEffect(() => {
         ctx.setHourSlotConfig({
-            slotHeight: props.height ?? Defaults.HOUR_SLOT_CONFIG.slotHeight
+            height: props.height ?? Defaults.HOUR_SLOT_CONFIG.height,
+            interval: props.interval ?? Defaults.HOUR_SLOT_CONFIG.interval
         });
-    }, [props.height, ctx.setHourSlotConfig]);
+    }, [props.height, props.interval, ctx.setHourSlotConfig]);
 
     return (
         <div
             className="hour-slot"
-            style={{height: `${ctx.hourSlotConfig.slotHeight}px`}}
+            style={{height: `${ctx.hourSlotConfig.height}px`}}
             onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();

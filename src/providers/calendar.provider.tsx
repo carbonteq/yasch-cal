@@ -2,7 +2,7 @@ import {useState} from "react";
 
 import {Defaults} from "@/constants/default.constant";
 
-import type {CalendarEvent, Event, TimeGrid, WeekHeader, WeekView} from "@/types/calendar.type";
+import type {CalendarEvent, Event, HourSlot, TimeGrid, WeekHeader, WeekView} from "@/types/calendar.type";
 import type {Dispatch, PropsWithChildren, SetStateAction} from "react";
 
 import {CalendarContext} from "@/contexts/calendar.context";
@@ -29,10 +29,8 @@ export interface ICalendarContext {
     timeGridSlots: Date[];
     setTimeGridSlots: Dispatch<SetStateAction<Date[]>>;
 
-    hourSlotConfig: {
-        slotHeight: number;
-    };
-    setHourSlotConfig: Dispatch<SetStateAction<{slotHeight: number}>>;
+    hourSlotConfig: HourSlot;
+    setHourSlotConfig: Dispatch<SetStateAction<HourSlot>>;
 
     eventConfig: Event;
     setEventConfig: Dispatch<SetStateAction<Event>>;
@@ -55,7 +53,7 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
 
     const [timeGridSlots, setTimeGridSlots] = useState<Date[]>([]);
 
-    const [hourSlotConfig, setHourSlotConfig] = useState(Defaults.HOUR_SLOT_CONFIG);
+    const [hourSlotConfig, setHourSlotConfig] = useState<HourSlot>(Defaults.HOUR_SLOT_CONFIG);
 
     const [eventConfig, setEventConfig] = useState<Event>(Defaults.EVENT_CONFIG);
 

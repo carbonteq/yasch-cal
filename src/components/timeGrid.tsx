@@ -15,14 +15,13 @@ export const TimeGrid: FC<TimeGridProps> = (props) => {
     useEffect(() => {
         ctx.setTimeGridConfig({
             hourRange: props.hourRange ?? Defaults.TIME_GRID_CONFIG.hourRange,
-            interval: props.interval ?? Defaults.TIME_GRID_CONFIG.interval,
             showCurrentTimeIndicator:
                 props.showCurrentTimeIndicator ?? Defaults.TIME_GRID_CONFIG.showCurrentTimeIndicator,
             displayFormat: props.displayFormat ?? Defaults.TIME_GRID_CONFIG.displayFormat
         });
 
-        ctx.setTimeGridSlots(generateTimeSlots(props.interval));
-    }, [props.displayFormat, ctx.setTimeGridConfig, props.hourRange, props.interval, props.showCurrentTimeIndicator]);
+        ctx.setTimeGridSlots(generateTimeSlots(Defaults.TIME_GRID_INTERVAL));
+    }, [props.displayFormat, ctx.setTimeGridConfig, props.hourRange, props.showCurrentTimeIndicator]);
 
     const generateTimeSlots = (interval: number = 60) => {
         const slots: Date[] = [];
@@ -52,7 +51,7 @@ export const TimeGrid: FC<TimeGridProps> = (props) => {
                     justifyContent: "space-evenly"
                 }}>
                 {ctx.timeGridSlots.map((time, index) => (
-                    <div key={index} className="time-grid-marker" style={{height: ctx.hourSlotConfig.slotHeight}}>
+                    <div key={index} className="time-grid-marker" style={{height: ctx.hourSlotConfig.height}}>
                         {time.toLocaleTimeString("en-US", {
                             hour: ctx.timeGridConfig.displayFormat.hour,
                             minute: ctx.timeGridConfig.displayFormat.minute

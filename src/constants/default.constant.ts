@@ -21,14 +21,14 @@ const TIME_GRID_DISPLAY_FORMAT = {
 
 const TIME_GRID_CONFIG = {
     hourRange: [0, 23] as [number, number],
-    interval: 60,
     showCurrentTimeIndicator: true,
     displayFormat: TIME_GRID_DISPLAY_FORMAT
 } as const;
 
 const HOUR_SLOT_CONFIG = {
-    slotHeight: 48 as number
-};
+    height: 48,
+    interval: 15
+} as const;
 
 const EVENT_CONFIG = {
     minEventDuration: 15,
@@ -36,11 +36,14 @@ const EVENT_CONFIG = {
     events: []
 };
 
+const TIME_GRID_INTERVAL = 60;
+
 export const Defaults = {
     WEEK_HEADER_DISPLAY_FORMAT,
     WEEK_VIEW_CONFIG,
     WEEK_HEADER_CONFIG,
     TIME_GRID_CONFIG,
     HOUR_SLOT_CONFIG,
-    EVENT_CONFIG
+    EVENT_CONFIG,
+    TIME_GRID_INTERVAL
 };

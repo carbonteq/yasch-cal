@@ -33,7 +33,6 @@ export interface Calendar extends Styling, PropsWithChildren {}
 
 export interface TimeGrid {
     hourRange?: [number, number];
-    interval?: number;
     showCurrentTimeIndicator?: boolean;
     displayFormat?: ITimeDisplayFormats;
 }
@@ -62,6 +61,7 @@ export interface HourSlot extends Styling {
     start?: Date;
     end?: Date;
     height?: number;
+    interval?: number;
     onSlotSelect?: (slot: TimeRange) => void;
     isSlotSelectAllowed?: (slot: TimeRange) => boolean;
 }

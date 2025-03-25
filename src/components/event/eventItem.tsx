@@ -15,14 +15,15 @@ export const EventItem: FC<EventItemProps> = (props) => {
             <div
                 key={event.id}
                 className="event-item"
+                draggable={true}
                 style={{
                     position: "absolute",
                     zIndex: event.index,
                     width: width,
-                    height: EventUtils.height(event, ctx.hourSlotConfig.slotHeight),
+                    height: EventUtils.height(event, ctx.hourSlotConfig.height ?? 0),
                     top: CssUtil.calculateTopPosition(
                         event.start,
-                        ctx.hourSlotConfig.slotHeight,
+                        ctx.hourSlotConfig.height ?? 0,
                         CssUtil.getElementCoordinates(".day-view-container")?.top ?? 0
                     ),
                     left: left
