@@ -26,15 +26,21 @@ export const EventItem: FC<EventItemProps> = (props) => {
             ? ctx.eventItemConfig.isEventDragAllowed(event)
             : true;
 
+        const isResizeAllowed = ctx.eventItemConfig.isEventResizeAllowed
+            ? ctx.eventItemConfig.isEventResizeAllowed(event)
+            : true;
+
+        const height = CssUtil.height(event, ctx.hourSlotConfig.height ?? 0);
+
         return (
             <div
                 key={event.id}
-                className="event-item"
+                className={`event-item-${event.id}`}
                 style={{
                     position: "absolute",
                     zIndex: event.index,
                     width: width,
-                    height: CssUtil.height(event, ctx.hourSlotConfig.height ?? 0),
+                    height: height,
                     top: top,
                     left: left,
                     cursor: isDragAllowed ? "grab" : "default"
@@ -47,6 +53,29 @@ export const EventItem: FC<EventItemProps> = (props) => {
                     e.dataTransfer.setData("event", JSON.stringify(event));
                 }}>
                 {props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>}
+                {isResizeAllowed && (
+                    <div
+                        ref={ctx.resizeRef}
+                        className="event-resize-handle"
+                        onMouseDown={(e) =>
+                            ctx.handleResize({
+                                e,
+                                calendarEvent: event,
+                                height,
+                                onEventResizeEnd: props.onEventResizeEnd
+                            })
+                        }
+                        style={{
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: "8px",
+                            cursor: "ns-resize",
+                            backgroundColor: "transparent"
+                        }}
+                    />
+                )}
             </div>
         );
     });

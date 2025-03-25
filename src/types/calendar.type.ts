@@ -88,7 +88,7 @@ export interface Event extends PropsWithChildren {
 export interface EventItem extends Styling {
     onEventClick?: (event: CalendarEvent) => void;
     onEventDragEnd?: (event: CalendarEvent) => void;
-    onEventResize?: (event: CalendarEvent) => void;
+    onEventResizeEnd?: (event: CalendarEvent) => void;
 
     // validations
     isEventOverlapAllowed?: (existing: CalendarEvent, moving: CalendarEvent) => boolean;

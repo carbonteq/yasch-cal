@@ -55,16 +55,16 @@ export const App = () => {
             randomProp2: "randomValue2"
         },
         {
-            id: "6",
-            title: "E6",
+            id: "7",
+            title: "E7",
             start: "2025-03-24T00:00:00.000Z",
             end: "2025-03-24T00:30:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
         {
-            id: "7",
-            title: "E7",
+            id: "6",
+            title: "E6",
             start: "2025-03-24T00:00:00.000Z",
             end: "2025-03-24T00:30:00.000Z",
             randomProp1: "randomValue",
@@ -90,10 +90,7 @@ export const App = () => {
             </WeekView>
             <Event events={sampleEvents}>
                 <EventItem
-                    onEventClick={(event) => {
-                        console.log("event", event.title);
-                    }}
-                    onEventDragEnd={(event) => {
+                    onEventResizeEnd={(event) => {
                         console.log("event", event);
                     }}
                 />
