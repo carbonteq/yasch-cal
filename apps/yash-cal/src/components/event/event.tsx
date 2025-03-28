@@ -17,19 +17,21 @@ export const Event: FC<EventProps> = (props) => {
 
     useEffect(() => {
         if (props.events) {
-            const newEvents = props.events.map((event, index) => {
-                const {id, title, start, end, ...rest} = event;
+            const newEvents = props.events
+                .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+                .map((event, index) => {
+                    const {id, title, start, end, ...rest} = event;
 
-                return {
-                    id,
-                    title,
-                    start,
-                    end,
-                    index,
-                    meta: rest,
-                    dateAndTime: ctx.setEventDateTime(event)
-                };
-            });
+                    return {
+                        id,
+                        title,
+                        start,
+                        end,
+                        index,
+                        meta: rest,
+                        dateAndTime: ctx.setEventDateTime(event)
+                    };
+                });
 
             ctx.setEvents(newEvents);
 

@@ -54,12 +54,16 @@ const calculateTopPosition = (event: CalendarEvent, slotHeight: number, distance
 
 const widthAndLeftofEvent = (events: CalendarEvent[], event: CalendarEvent) => {
     const eventStart = event.start;
-    const eventEnd = event.end;
     const hourSlotCoordinates = CssUtil.getElementCoordinates(".hour-slot");
     const dayViewContainerCoordinates = CssUtil.getElementCoordinates(".day-view-container");
 
-    // Find events that overlap with the current event
-    const overlappingEvents = events.filter((e) => e.start < eventEnd && e.end > eventStart);
+    // Find events that overlap with the current event by checking same date and hour
+    const overlappingEvents = events.filter((e) => {
+        const eStartDate = new Date(e.start);
+        const eventStartDate = new Date(eventStart);
+
+        return eStartDate.getDate() === eventStartDate.getDate() && eStartDate.getHours() === eventStartDate.getHours();
+    });
 
     // Total number of overlapping events
     const totalOverlaps = overlappingEvents.length;

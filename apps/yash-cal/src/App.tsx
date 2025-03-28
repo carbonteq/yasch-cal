@@ -21,6 +21,14 @@ export const App = () => {
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
+        // {
+        //     id: "2",
+        //     title: "E2",
+        //     start: "2025-03-25T01:30:00.000Z",
+        //     end: "2025-03-25T03:00:00.000Z",
+        //     randomProp1: "randomValue",
+        //     randomProp2: "randomValue2"
+        // },
         {
             id: "2",
             title: "E2",

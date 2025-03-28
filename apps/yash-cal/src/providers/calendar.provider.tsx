@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useState} from "react";
 
 import {Defaults} from "@/constants/default.constant";
 
@@ -86,11 +86,6 @@ export interface ICalendarContext {
 
     currentDraggedEvent: CalendarEvent | null;
     setCurrentDraggedEvent: Dispatch<SetStateAction<CalendarEvent | null>>;
-
-    // draggedElementRef: React.RefObject<HTMLElement | null>;
-    // startYRef: React.RefObject<number | null>;
-    // startTimeRef: React.RefObject<Date | null>;
-    // eventRef: React.RefObject<CalendarEvent | null>;
 }
 export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => {
     const [weekViewConfig, setWeekViewConfig] = useState<WeekView>(Defaults.WEEK_VIEW_CONFIG);
@@ -118,11 +113,6 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
     const [currentWeekEvents, setCurrentWeekEvents] = useState<CalendarEvent[]>([]);
 
     const [currentDraggedEvent, setCurrentDraggedEvent] = useState<CalendarEvent | null>(null);
-
-    // const draggedElementRef = useRef<HTMLElement | null>(null);
-    // const startYRef = useRef<number>(0);
-    // const startTimeRef = useRef<Date | null>(null);
-    // const eventRef = useRef<CalendarEvent | null>(null);
 
     const filterEventsForCurrentWeek = (events: CalendarEvent[], selectedWeek: string[]) => {
         const currentWeekEvents = events.filter((event) => {
@@ -237,11 +227,6 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
 
                 currentDraggedEvent,
                 setCurrentDraggedEvent
-
-                // draggedElementRef,
-                // startYRef,
-                // startTimeRef,
-                // eventRef
             }}>
             {props.children}
         </CalendarContext.Provider>
