@@ -90,7 +90,7 @@ export const App = () => {
             </WeekView>
             <Event events={sampleEvents}>
                 <EventItem
-                    onEventResizeEnd={(event) => {
+                    onEventDragEnd={(event) => {
                         console.log("event", event);
                     }}
                 />

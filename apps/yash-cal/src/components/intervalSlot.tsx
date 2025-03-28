@@ -41,8 +41,6 @@ export const IntervalSlot: FC<IProps> = (props) => {
             onDragOver={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-
-                console.log("onDragOver", props.start, props.index);
             }}
             onDrop={(e) => {
                 const newEvent = handleDrag(e, props.start ?? new Date().toISOString(), props.index);

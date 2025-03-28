@@ -61,24 +61,6 @@ export const EventItem: FC<EventItemProps> = (props) => {
                 onDragStart={(e) => {
                     e.dataTransfer.setData("event", JSON.stringify(event));
                 }}>
-                <div
-                    className="event-drag-handle"
-                    style={{
-                        position: "absolute",
-                        left: 0,
-                        right: 0,
-                        height: "1px",
-                        backgroundColor: "transparent"
-                    }}
-                    onMouseDown={(e) =>
-                        handleResize({
-                            e,
-                            calendarEvent: event,
-                            height,
-                            onEventResizeEnd: props.onEventResizeEnd
-                        })
-                    }
-                />
                 {props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>}
                 {isResizeAllowed && (
                     <div
