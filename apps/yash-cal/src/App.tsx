@@ -79,13 +79,7 @@ export const App = () => {
             <WeekView firstDayOfWeek={0}>
                 <TimeGrid />
                 <DayView>
-                    <HourSlot
-                        height={100}
-                        interval={15}
-                        onSlotSelect={(slot) => {
-                            console.log("slotTime", slot.start, slot.end);
-                        }}
-                    />
+                    <HourSlot height={100} interval={15} />
                 </DayView>
             </WeekView>
             <Event events={sampleEvents}>

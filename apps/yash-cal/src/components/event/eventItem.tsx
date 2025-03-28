@@ -1,5 +1,6 @@
 import {useEffect} from "react";
 
+import {useDrag} from "@/hooks/useDrag.hook";
 import {useResize} from "@/hooks/useResize.hook";
 
 import type {EventItem as EventItemProps} from "@/types/calendar.type";
@@ -12,6 +13,7 @@ export const EventItem: FC<EventItemProps> = (props) => {
     const ctx = useCalendarProvider();
 
     const {handleResize} = useResize();
+    const {handleDragStart} = useDrag();
 
     useEffect(() => {
         ctx.setEventItemConfig(props);
@@ -57,10 +59,12 @@ export const EventItem: FC<EventItemProps> = (props) => {
                 onClick={() => {
                     props.onEventClick?.(event);
                 }}
-                draggable={isDragAllowed}
-                onDragStart={(e) => {
-                    e.dataTransfer.setData("event", JSON.stringify(event));
-                }}>
+                // draggable={isDragAllowed}
+                onMouseDown={(e) => isDragAllowed && handleDragStart(e, event)}
+                // onDragStart={(e) => {
+                //     e.dataTransfer.setData("event", JSON.stringify(event));
+                // }}
+            >
                 {props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>}
                 {isResizeAllowed && (
                     <div

@@ -1,5 +1,3 @@
-import {useDrag} from "@/hooks/useDrag.hook";
-
 import type {TimeRange} from "@/types/calendar.type";
 import type {FC} from "react";
 
@@ -16,8 +14,6 @@ interface IProps {
 
 export const IntervalSlot: FC<IProps> = (props) => {
     const ctx = useCalendarProvider();
-
-    const {handleDrag} = useDrag();
 
     return (
         <div
@@ -37,15 +33,6 @@ export const IntervalSlot: FC<IProps> = (props) => {
                     isSlotSelectAllowed: props.isSlotSelectAllowed,
                     onSlotSelect: props.onSlotSelect
                 });
-            }}
-            onDragOver={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            }}
-            onDrop={(e) => {
-                const newEvent = handleDrag(e, props.start ?? new Date().toISOString(), props.index);
-
-                newEvent && ctx.eventItemConfig.onEventDragEnd?.(newEvent);
             }}
         />
     );
