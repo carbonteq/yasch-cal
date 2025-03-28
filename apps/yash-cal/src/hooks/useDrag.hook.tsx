@@ -13,6 +13,7 @@ export const useDrag = () => {
     const startYRef = useRef<number | null>(null);
     const startTimeRef = useRef<Date | null>(null);
     const eventRef = useRef<CalendarEvent | null>(null);
+    const lastHorizontalMoveRef = useRef<number>(0);
 
     const handleDragStart = (e: React.MouseEvent<HTMLElement, MouseEvent>, event: CalendarEvent) => {
         const draggedElement = e.currentTarget as HTMLElement;
@@ -22,6 +23,7 @@ export const useDrag = () => {
         startYRef.current = e.clientY;
         startTimeRef.current = new Date(event.start);
         eventRef.current = event;
+        lastHorizontalMoveRef.current = Date.now();
 
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
@@ -33,14 +35,76 @@ export const useDrag = () => {
             return;
         }
 
-        // Calculate vertical distance moved from start position
+        document.body.style.cursor = "move";
+
+        // Get event box dimensions and position
+        const rect = draggedElementRef.current.getBoundingClientRect();
+        const horizontalThreshold = rect.width * 0.1; // 20% of width for edge detection
+
+        // Check if cursor is in left or right edge zone
+        const isInLeftEdge = e.clientX >= rect.left && e.clientX <= rect.left + horizontalThreshold;
+        const isInRightEdge = e.clientX >= rect.right - horizontalThreshold && e.clientX <= rect.right;
+
+        // Handle horizontal movement with cooldown
+        const now = Date.now();
+        if (now - lastHorizontalMoveRef.current >= 1000) {
+            // 1000ms cooldown
+            if (isInLeftEdge || isInRightEdge) {
+                const currentDate = new Date(eventRef.current.start);
+                const newDate = new Date(currentDate);
+
+                if (isInLeftEdge) {
+                    newDate.setDate(currentDate.getDate() - 1);
+                } else if (isInRightEdge) {
+                    newDate.setDate(currentDate.getDate() + 1);
+                }
+
+                // Only proceed if the new date is within the current week
+                const isInCurrentWeek = ctx.selectedWeek.some((weekDay) => {
+                    const weekDayDate = new Date(weekDay);
+
+                    return (
+                        weekDayDate.getDate() === newDate.getDate() &&
+                        weekDayDate.getMonth() === newDate.getMonth() &&
+                        weekDayDate.getFullYear() === newDate.getFullYear()
+                    );
+                });
+
+                if (isInCurrentWeek) {
+                    // Update event dates
+                    const timeDiff = newDate.getTime() - currentDate.getTime();
+                    const updatedEvent: CalendarEvent = {
+                        ...eventRef.current,
+                        start: new Date(new Date(eventRef.current.start).getTime() + timeDiff).toISOString(),
+                        end: new Date(new Date(eventRef.current.end).getTime() + timeDiff).toISOString()
+                    };
+                    updatedEvent.dateAndTime = ctx.setEventDateTime(updatedEvent);
+
+                    // Update the events array immediately
+                    const newEvents = [...ctx.events];
+                    const eventIndex = newEvents.findIndex((e) => e.id === updatedEvent.id);
+                    if (eventIndex !== -1) {
+                        newEvents[eventIndex] = updatedEvent;
+                        ctx.setEvents(newEvents);
+                        ctx.setCurrentWeekEvents(ctx.filterEventsForCurrentWeek(newEvents, ctx.selectedWeek));
+                    }
+
+                    // Update the visual position
+                    const {width, left} = CssUtil.widthAndLeftofEvent(newEvents, updatedEvent);
+                    if (draggedElementRef.current) {
+                        draggedElementRef.current.style.left = `${left}px`;
+                        draggedElementRef.current.style.width = width;
+                    }
+
+                    eventRef.current = updatedEvent;
+                    lastHorizontalMoveRef.current = now;
+                }
+            }
+        }
+
+        // Handle vertical movement
         const deltaY = e.clientY - startYRef.current;
-
-        // Calculate height of one interval in pixels
         const intervalHeight = ((ctx.hourSlotConfig.height ?? 0) * (ctx.hourSlotConfig.interval ?? 60)) / 60;
-
-        // Calculate how many intervals we've moved through
-        // Round to nearest interval to snap to grid
         const intervals = Math.round(deltaY / intervalHeight);
 
         if (intervals !== 0) {
@@ -101,9 +165,11 @@ export const useDrag = () => {
         startYRef.current = null;
         startTimeRef.current = null;
         eventRef.current = null;
+        lastHorizontalMoveRef.current = 0;
 
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
+        document.body.style.cursor = "default";
     };
 
     return {handleDragStart};
