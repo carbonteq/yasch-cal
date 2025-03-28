@@ -28,8 +28,18 @@ Dockerfile
 .gitignore
 .npmrc
 
-# Misc
+# images
 *.png
+*.svg
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.ico
+
+# misc
+LICENSE
+
 
 # Docker
 /ops
