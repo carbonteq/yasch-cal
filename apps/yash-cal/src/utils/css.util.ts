@@ -1,4 +1,4 @@
-import type {CalendarEvent} from "@/types/calendar.type";
+import type {CalendarEvent, HourSlot} from "@/types/calendar.type";
 
 import {DateUtils} from "./date.util";
 
@@ -94,9 +94,38 @@ const height = (event: CalendarEvent, slotHeight: number) => {
     // - (willTakeMinutes < 60 ? 0 : PADDING_PX);
 };
 
+/**
+ * Calculates the duration of an event based on the height of the event
+ * @param params - The parameters for the calculation
+ * @returns The duration of the event
+ */
+const calculateResizedEventDuration = (params: {
+    clientY: number;
+    height: number;
+    hourSlotConfig: HourSlot;
+    startY: number;
+    minDuration: number;
+    maxDuration: number;
+}) => {
+    const deltaY = params.clientY - params.startY;
+    const newHeight = Math.max(params.height + deltaY, 0); // Prevent negative height
+
+    // Calculate minutes based on height
+    const minutesPerPixel = 60 / (params.hourSlotConfig.height as number);
+    const durationInMinutes = Math.round(newHeight * minutesPerPixel);
+
+    // Snap to nearest interval
+    const interval = params.hourSlotConfig.interval as number;
+    const snappedDuration = Math.round(durationInMinutes / interval) * interval;
+
+    // Enforce minimum and maximum duration
+    return Math.min(Math.max(snappedDuration, params.minDuration), params.maxDuration);
+};
+
 export const CssUtil = {
     calculateTopPosition,
     getElementCoordinates,
     widthAndLeftofEvent,
-    height
+    height,
+    calculateResizedEventDuration
 };

@@ -20,7 +20,7 @@ import {DateUtils} from "@/utils/date.util";
 
 interface IProps {}
 
-type dateAndTime = {
+export type dateAndTime = {
     start: {
         year: string;
         month: string;
@@ -83,15 +83,6 @@ export interface ICalendarContext {
     setEventDateTime: (event: CalendarEvent) => dateAndTime;
 
     filterEventsForCurrentWeek: (events: CalendarEvent[], selectedWeek: string[]) => CalendarEvent[];
-
-    dropHandler: (e: React.DragEvent<HTMLDivElement>, start: string, index: number) => CalendarEvent;
-
-    handleResize: (params: {
-        e: React.MouseEvent;
-        calendarEvent: CalendarEvent;
-        height: number;
-        onEventResizeEnd?: (event: CalendarEvent) => void;
-    }) => void;
 }
 export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => {
     const [weekViewConfig, setWeekViewConfig] = useState<WeekView>(Defaults.WEEK_VIEW_CONFIG);
@@ -117,6 +108,25 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
     const [events, setEvents] = useState<CalendarEvent[]>([]);
 
     const [currentWeekEvents, setCurrentWeekEvents] = useState<CalendarEvent[]>([]);
+
+    const filterEventsForCurrentWeek = (events: CalendarEvent[], selectedWeek: string[]) => {
+        const currentWeekEvents = events.filter((event) => {
+            const eventDate = new Date(event.start);
+
+            // Check if the event date falls within the selected week
+            return selectedWeek.some((weekDay) => {
+                const weekDayDate = new Date(weekDay);
+
+                return (
+                    eventDate.getFullYear() === weekDayDate.getFullYear() &&
+                    eventDate.getMonth() === weekDayDate.getMonth() &&
+                    eventDate.getDate() === weekDayDate.getDate()
+                );
+            });
+        });
+
+        return currentWeekEvents;
+    };
 
     const setEventDateTime = (event: CalendarEvent) => {
         const [startDate, startTime] = event.start.split("T") as TIsoDateTimeSplit;
@@ -147,59 +157,6 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
         };
     };
 
-    const filterEventsForCurrentWeek = (events: CalendarEvent[], selectedWeek: string[]) => {
-        const currentWeekEvents = events.filter((event) => {
-            const eventDate = new Date(event.start);
-
-            // Check if the event date falls within the selected week
-            return selectedWeek.some((weekDay) => {
-                const weekDayDate = new Date(weekDay);
-
-                return (
-                    eventDate.getFullYear() === weekDayDate.getFullYear() &&
-                    eventDate.getMonth() === weekDayDate.getMonth() &&
-                    eventDate.getDate() === weekDayDate.getDate()
-                );
-            });
-        });
-
-        return currentWeekEvents;
-    };
-
-    const dropHandler = (e: React.DragEvent<HTMLDivElement>, start: string, index: number) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const event = JSON.parse(e.dataTransfer.getData("event"));
-
-        const currentSlotTimeStart = new Date(start);
-        currentSlotTimeStart.setMinutes(currentSlotTimeStart.getMinutes() + index * (hourSlotConfig.interval ?? 60));
-        const currentSlotTimeEnd = new Date(currentSlotTimeStart);
-        currentSlotTimeEnd.setMinutes(
-            currentSlotTimeEnd.getMinutes() +
-                DateUtils.getTimeDifferenceInMinutes(new Date(event.start), new Date(event.end))
-        );
-
-        const newEvents = [...events];
-        const toBeUpdatedEvent = newEvents.find((prevEvent) => prevEvent.id === event.id) as CalendarEvent;
-
-        toBeUpdatedEvent.start = currentSlotTimeStart.toISOString();
-        toBeUpdatedEvent.end = currentSlotTimeEnd.toISOString();
-        toBeUpdatedEvent.dateAndTime = setEventDateTime(toBeUpdatedEvent);
-
-        setEvents(newEvents);
-
-        const newSelectedEvents = [...currentWeekEvents];
-        const selectedEventIndex = newSelectedEvents.findIndex((prevEvent) => prevEvent.id === event.id);
-
-        if (selectedEventIndex !== -1) {
-            newSelectedEvents[selectedEventIndex] = toBeUpdatedEvent;
-        }
-
-        setCurrentWeekEvents(newSelectedEvents);
-
-        return toBeUpdatedEvent;
-    };
-
     const onIntervalSlotClick = (params: {
         start?: string;
         index: number;
@@ -219,93 +176,6 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
                 params.onSlotSelect?.(timeRange);
             }
         }
-    };
-
-    const handleResize = (params: {
-        e: React.MouseEvent;
-        calendarEvent: CalendarEvent;
-        height: number;
-        onEventResizeEnd?: (event: CalendarEvent) => void;
-    }) => {
-        const {e, calendarEvent, height, onEventResizeEnd} = params;
-        e.preventDefault();
-        e.stopPropagation();
-
-        const isResizeAllowed = eventItemConfig.isEventResizeAllowed
-            ? eventItemConfig.isEventResizeAllowed(calendarEvent)
-            : true;
-
-        if (!isResizeAllowed) return;
-
-        const startY = e.clientY;
-        const startTime = new Date(calendarEvent.start);
-        const minDuration = eventConfig.minEventDuration as number;
-        const maxDuration = eventConfig.maxEventDuration as number;
-
-        // Store the event element being resized to ensure we only modify this specific event
-        const currentEventElement = document.querySelector<HTMLElement>(`.event-item-${calendarEvent.id}`);
-
-        const calculateResizedEventDuration = (clientY: number) => {
-            const deltaY = clientY - startY;
-            const newHeight = Math.max(height + deltaY, 0); // Prevent negative height
-
-            // Calculate minutes based on height
-            const minutesPerPixel = 60 / (hourSlotConfig.height as number);
-            const durationInMinutes = Math.round(newHeight * minutesPerPixel);
-
-            // Snap to nearest interval
-            const interval = hourSlotConfig.interval as number;
-            const snappedDuration = Math.round(durationInMinutes / interval) * interval;
-
-            // Enforce minimum and maximum duration
-            return Math.min(Math.max(snappedDuration, minDuration), maxDuration);
-        };
-
-        const getNewEndTime = (durationInMinutes: number) => {
-            const newEndTime = new Date(startTime);
-            newEndTime.setMinutes(startTime.getMinutes() + durationInMinutes);
-
-            return newEndTime;
-        };
-
-        const handleMouseMove = (e: MouseEvent) => {
-            const clampedDuration = calculateResizedEventDuration(e.clientY);
-
-            // Calculate the height based on the clamped duration
-            const newHeightFromDuration = (clampedDuration / 60) * (hourSlotConfig.height as number);
-
-            // Update event height temporarily - only for the specific event being resized
-            if (currentEventElement) {
-                currentEventElement.style.height = `${newHeightFromDuration}px`;
-            }
-        };
-
-        const handleMouseUp = (e: MouseEvent) => {
-            const clampedDuration = calculateResizedEventDuration(e.clientY);
-            const newEndTime = getNewEndTime(clampedDuration);
-
-            // Update the event
-            const newEvents = [...events];
-            const eventIndex = newEvents.findIndex((e) => e.id === calendarEvent.id);
-            if (eventIndex !== -1) {
-                const updatedEvent: CalendarEvent = {
-                    ...calendarEvent,
-                    end: newEndTime.toISOString()
-                };
-                updatedEvent.dateAndTime = setEventDateTime(updatedEvent);
-                newEvents[eventIndex] = updatedEvent;
-
-                setEvents(newEvents);
-                setCurrentWeekEvents(filterEventsForCurrentWeek(newEvents, selectedWeek));
-                onEventResizeEnd?.(updatedEvent);
-            }
-
-            document.removeEventListener("mousemove", handleMouseMove);
-            document.removeEventListener("mouseup", handleMouseUp);
-        };
-
-        document.addEventListener("mousemove", handleMouseMove);
-        document.addEventListener("mouseup", handleMouseUp);
     };
 
     return (
@@ -348,11 +218,7 @@ export const CalendarProvider: React.FC<PropsWithChildren<IProps>> = (props) => 
 
                 setEventDateTime,
 
-                filterEventsForCurrentWeek,
-
-                dropHandler,
-
-                handleResize
+                filterEventsForCurrentWeek
             }}>
             {props.children}
         </CalendarContext.Provider>

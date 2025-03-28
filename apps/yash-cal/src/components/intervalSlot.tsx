@@ -1,3 +1,5 @@
+import {useDrag} from "@/hooks/useDrag.hook";
+
 import type {TimeRange} from "@/types/calendar.type";
 import type {FC} from "react";
 
@@ -15,10 +17,14 @@ interface IProps {
 export const IntervalSlot: FC<IProps> = (props) => {
     const ctx = useCalendarProvider();
 
-    const dragoverHandler = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-    };
+    const {handleDrag} = useDrag({
+        events: ctx.events,
+        currentWeekEvents: ctx.currentWeekEvents,
+        hourSlotConfig: ctx.hourSlotConfig,
+        setEvents: ctx.setEvents,
+        setCurrentWeekEvents: ctx.setCurrentWeekEvents,
+        setEventDateTime: ctx.setEventDateTime
+    });
 
     return (
         <div
@@ -27,12 +33,6 @@ export const IntervalSlot: FC<IProps> = (props) => {
             style={{
                 width: "100%",
                 height: `${props.intervalHeight}px`
-            }}
-            onDragOver={dragoverHandler}
-            onDrop={(e) => {
-                const newEvent = ctx.dropHandler(e, props.start ?? new Date().toISOString(), props.index);
-
-                ctx.eventItemConfig.onEventDragEnd?.(newEvent);
             }}
             onClick={(e) => {
                 e.stopPropagation();
@@ -44,6 +44,15 @@ export const IntervalSlot: FC<IProps> = (props) => {
                     isSlotSelectAllowed: props.isSlotSelectAllowed,
                     onSlotSelect: props.onSlotSelect
                 });
+            }}
+            onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }}
+            onDrop={(e) => {
+                const newEvent = handleDrag(e, props.start ?? new Date().toISOString(), props.index);
+
+                ctx.eventItemConfig.onEventDragEnd?.(newEvent);
             }}
         />
     );
