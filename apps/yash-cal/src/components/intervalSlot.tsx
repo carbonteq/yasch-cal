@@ -17,14 +17,7 @@ interface IProps {
 export const IntervalSlot: FC<IProps> = (props) => {
     const ctx = useCalendarProvider();
 
-    const {handleDrag} = useDrag({
-        events: ctx.events,
-        currentWeekEvents: ctx.currentWeekEvents,
-        hourSlotConfig: ctx.hourSlotConfig,
-        setEvents: ctx.setEvents,
-        setCurrentWeekEvents: ctx.setCurrentWeekEvents,
-        setEventDateTime: ctx.setEventDateTime
-    });
+    const {handleDrag} = useDrag();
 
     return (
         <div
@@ -48,11 +41,13 @@ export const IntervalSlot: FC<IProps> = (props) => {
             onDragOver={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+
+                console.log("onDragOver", props.start, props.index);
             }}
             onDrop={(e) => {
                 const newEvent = handleDrag(e, props.start ?? new Date().toISOString(), props.index);
 
-                ctx.eventItemConfig.onEventDragEnd?.(newEvent);
+                newEvent && ctx.eventItemConfig.onEventDragEnd?.(newEvent);
             }}
         />
     );

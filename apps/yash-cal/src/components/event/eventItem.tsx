@@ -11,19 +11,7 @@ import {CssUtil} from "@/utils/css.util";
 export const EventItem: FC<EventItemProps> = (props) => {
     const ctx = useCalendarProvider();
 
-    const {handleResize} = useResize({
-        eventItemConfig: ctx.eventItemConfig,
-        eventConfig: ctx.eventConfig,
-        events: ctx.events,
-        currentWeekEvents: ctx.currentWeekEvents,
-        selectedWeek: ctx.selectedWeek,
-        hourSlotConfig: ctx.hourSlotConfig,
-        setEvents: ctx.setEvents,
-        setCurrentWeekEvents: ctx.setCurrentWeekEvents,
-        filterEventsForCurrentWeek: ctx.filterEventsForCurrentWeek,
-        setSelectedWeek: ctx.setSelectedWeek,
-        setEventDateTime: ctx.setEventDateTime
-    });
+    const {handleResize} = useResize();
 
     useEffect(() => {
         ctx.setEventItemConfig(props);

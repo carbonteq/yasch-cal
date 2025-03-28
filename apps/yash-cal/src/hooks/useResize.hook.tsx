@@ -1,22 +1,11 @@
-import type {dateAndTime} from "@/providers/calendar.provider";
-import type {CalendarEvent, Event, EventItem, HourSlot} from "@/types/calendar.type";
+import type {CalendarEvent} from "@/types/calendar.type";
 
+import {useCalendarProvider} from "@/contexts/calendar.context";
 import {CssUtil} from "@/utils/css.util";
 
-export const useResize = (props: {
-    eventItemConfig: EventItem;
-    eventConfig: Event;
-    events: CalendarEvent[];
-    currentWeekEvents: CalendarEvent[];
-    selectedWeek: string[];
-    hourSlotConfig: HourSlot;
+export const useResize = () => {
+    const ctx = useCalendarProvider();
 
-    setEvents: (events: CalendarEvent[]) => void;
-    setCurrentWeekEvents: (events: CalendarEvent[]) => void;
-    filterEventsForCurrentWeek: (events: CalendarEvent[], selectedWeek: string[]) => CalendarEvent[];
-    setSelectedWeek: (week: string[]) => void;
-    setEventDateTime: (event: CalendarEvent) => dateAndTime;
-}) => {
     const handleResize = (params: {
         e: React.MouseEvent;
         calendarEvent: CalendarEvent;
@@ -26,16 +15,16 @@ export const useResize = (props: {
         params.e.preventDefault();
         params.e.stopPropagation();
 
-        const isResizeAllowed = props.eventItemConfig.isEventResizeAllowed
-            ? props.eventItemConfig.isEventResizeAllowed(params.calendarEvent)
+        const isResizeAllowed = ctx.eventItemConfig.isEventResizeAllowed
+            ? ctx.eventItemConfig.isEventResizeAllowed(params.calendarEvent)
             : true;
 
         if (!isResizeAllowed) return;
 
         const startY = params.e.clientY;
         const startTime = new Date(params.calendarEvent.start);
-        const minDuration = props.eventConfig.minEventDuration as number;
-        const maxDuration = props.eventConfig.maxEventDuration as number;
+        const minDuration = ctx.eventConfig.minEventDuration as number;
+        const maxDuration = ctx.eventConfig.maxEventDuration as number;
 
         // Store the event element being resized to ensure we only modify this specific event
         const currentEventElement = document.querySelector<HTMLElement>(`.event-item-${params.calendarEvent.id}`);
@@ -55,11 +44,11 @@ export const useResize = (props: {
                 height: params.height,
                 minDuration,
                 maxDuration,
-                hourSlotConfig: props.hourSlotConfig
+                hourSlotConfig: ctx.hourSlotConfig
             });
 
             // Calculate the height based on the clamped duration
-            const newHeightFromDuration = (clampedDuration / 60) * (props.hourSlotConfig.height as number);
+            const newHeightFromDuration = (clampedDuration / 60) * (ctx.hourSlotConfig.height as number);
 
             // Update event height temporarily - only for the specific event being resized
             if (currentEventElement) {
@@ -74,23 +63,23 @@ export const useResize = (props: {
                 height: params.height,
                 minDuration,
                 maxDuration,
-                hourSlotConfig: props.hourSlotConfig
+                hourSlotConfig: ctx.hourSlotConfig
             });
             const newEndTime = getNewEndTime(clampedDuration);
 
             // Update the event
-            const newEvents = [...props.events];
+            const newEvents = [...ctx.events];
             const eventIndex = newEvents.findIndex((e) => e.id === params.calendarEvent.id);
             if (eventIndex !== -1) {
                 const updatedEvent: CalendarEvent = {
                     ...params.calendarEvent,
                     end: newEndTime.toISOString()
                 };
-                updatedEvent.dateAndTime = props.setEventDateTime(updatedEvent);
+                updatedEvent.dateAndTime = ctx.setEventDateTime(updatedEvent);
                 newEvents[eventIndex] = updatedEvent;
 
-                props.setEvents(newEvents);
-                props.setCurrentWeekEvents(props.filterEventsForCurrentWeek(newEvents, props.selectedWeek));
+                ctx.setEvents(newEvents);
+                ctx.setCurrentWeekEvents(ctx.filterEventsForCurrentWeek(newEvents, ctx.selectedWeek));
                 params.onEventResizeEnd?.(updatedEvent);
             }
 
