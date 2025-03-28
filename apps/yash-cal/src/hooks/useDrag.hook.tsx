@@ -29,6 +29,35 @@ export const useDrag = () => {
         document.addEventListener("mouseup", handleMouseUp);
     };
 
+    const handleMouseUp = () => {
+        if (eventRef.current) {
+            // Update the events array with the final position
+            const newEvents = [...ctx.events];
+            const eventIndex = newEvents.findIndex((e) => e.id === eventRef.current!.id);
+            if (eventIndex !== -1) {
+                newEvents[eventIndex] = eventRef.current;
+                ctx.setEvents(newEvents);
+                ctx.setCurrentWeekEvents(ctx.filterEventsForCurrentWeek(newEvents, ctx.selectedWeek));
+
+                // Notify about drag end through the callback
+                ctx.eventItemConfig.onEventDragEnd?.(eventRef.current);
+            }
+        }
+
+        ctx.eventItemConfig.onEventDragEnd?.(eventRef.current as CalendarEvent);
+
+        // Clean up
+        draggedElementRef.current = null;
+        startYRef.current = null;
+        startTimeRef.current = null;
+        eventRef.current = null;
+        lastHorizontalMoveRef.current = 0;
+
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+        document.body.style.cursor = "default";
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
         // Return early if we don't have all the required refs
         if (!draggedElementRef.current || !startYRef.current || !startTimeRef.current || !eventRef.current) {
@@ -141,35 +170,6 @@ export const useDrag = () => {
             // Store the updated event for next movement calculation
             eventRef.current = updatedEvent;
         }
-    };
-
-    const handleMouseUp = () => {
-        if (eventRef.current) {
-            // Update the events array with the final position
-            const newEvents = [...ctx.events];
-            const eventIndex = newEvents.findIndex((e) => e.id === eventRef.current!.id);
-            if (eventIndex !== -1) {
-                newEvents[eventIndex] = eventRef.current;
-                ctx.setEvents(newEvents);
-                ctx.setCurrentWeekEvents(ctx.filterEventsForCurrentWeek(newEvents, ctx.selectedWeek));
-
-                // Notify about drag end through the callback
-                ctx.eventItemConfig.onEventDragEnd?.(eventRef.current);
-            }
-        }
-
-        ctx.eventItemConfig.onEventDragEnd?.(eventRef.current as CalendarEvent);
-
-        // Clean up
-        draggedElementRef.current = null;
-        startYRef.current = null;
-        startTimeRef.current = null;
-        eventRef.current = null;
-        lastHorizontalMoveRef.current = 0;
-
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-        document.body.style.cursor = "default";
     };
 
     return {handleDragStart};
