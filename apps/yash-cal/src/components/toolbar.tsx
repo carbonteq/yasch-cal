@@ -13,6 +13,13 @@ export const Toolbar: FC<ToolbarProps> = (props) => {
                 <button
                     className="toolbar-button-today"
                     onClick={() => {
+                        const today = new Date();
+                        const newSelectedWeek = DateUtils.getWeekDates(today, ctx.weekViewConfig.firstDayOfWeek);
+
+                        ctx.setSelectedWeek(newSelectedWeek);
+
+                        ctx.setCurrentWeekEvents(ctx.filterEventsForCurrentWeek(ctx.events, newSelectedWeek));
+
                         props.onTodayClick?.();
                     }}>
                     Today
