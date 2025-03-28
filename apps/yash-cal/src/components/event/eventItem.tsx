@@ -11,7 +11,7 @@ import {CssUtil} from "@/utils/css.util";
 export const EventItem: FC<EventItemProps> = (props) => {
     const ctx = useCalendarProvider();
 
-    const {handleResize, isResizing} = useResize({
+    const {handleResize} = useResize({
         eventItemConfig: ctx.eventItemConfig,
         eventConfig: ctx.eventConfig,
         events: ctx.events,
@@ -58,8 +58,13 @@ export const EventItem: FC<EventItemProps> = (props) => {
                     width: width,
                     height: height,
                     top: top,
-                    left: left,
-                    cursor: isResizing ? "ns-resize" : isDragAllowed ? "grab" : "default"
+                    left: left
+                }}
+                onMouseEnter={() => {
+                    document.body.style.cursor = "grab";
+                }}
+                onMouseLeave={() => {
+                    document.body.style.cursor = "default";
                 }}
                 onClick={() => {
                     props.onEventClick?.(event);
@@ -68,18 +73,28 @@ export const EventItem: FC<EventItemProps> = (props) => {
                 onDragStart={(e) => {
                     e.dataTransfer.setData("event", JSON.stringify(event));
                 }}>
+                <div
+                    className="event-drag-handle"
+                    style={{
+                        position: "absolute",
+                        left: 0,
+                        right: 0,
+                        height: "1px",
+                        backgroundColor: "transparent"
+                    }}
+                    onMouseDown={(e) =>
+                        handleResize({
+                            e,
+                            calendarEvent: event,
+                            height,
+                            onEventResizeEnd: props.onEventResizeEnd
+                        })
+                    }
+                />
                 {props.render ? props.render(event) : <div className="event-item-title">{event.title}</div>}
                 {isResizeAllowed && (
                     <div
                         className="event-resize-handle"
-                        onMouseDown={(e) =>
-                            handleResize({
-                                e,
-                                calendarEvent: event,
-                                height,
-                                onEventResizeEnd: props.onEventResizeEnd
-                            })
-                        }
                         style={{
                             position: "absolute",
                             bottom: 0,
@@ -89,6 +104,14 @@ export const EventItem: FC<EventItemProps> = (props) => {
                             cursor: "ns-resize",
                             backgroundColor: "transparent"
                         }}
+                        onMouseDown={(e) =>
+                            handleResize({
+                                e,
+                                calendarEvent: event,
+                                height,
+                                onEventResizeEnd: props.onEventResizeEnd
+                            })
+                        }
                     />
                 )}
             </div>

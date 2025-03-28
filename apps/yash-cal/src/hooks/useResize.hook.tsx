@@ -1,5 +1,3 @@
-import {useState} from "react";
-
 import type {dateAndTime} from "@/providers/calendar.provider";
 import type {CalendarEvent, Event, EventItem, HourSlot} from "@/types/calendar.type";
 
@@ -19,8 +17,6 @@ export const useResize = (props: {
     setSelectedWeek: (week: string[]) => void;
     setEventDateTime: (event: CalendarEvent) => dateAndTime;
 }) => {
-    const [isResizing, setIsResizing] = useState(false);
-
     const handleResize = (params: {
         e: React.MouseEvent;
         calendarEvent: CalendarEvent;
@@ -29,8 +25,6 @@ export const useResize = (props: {
     }) => {
         params.e.preventDefault();
         params.e.stopPropagation();
-
-        setIsResizing(true);
 
         const isResizeAllowed = props.eventItemConfig.isEventResizeAllowed
             ? props.eventItemConfig.isEventResizeAllowed(params.calendarEvent)
@@ -102,8 +96,7 @@ export const useResize = (props: {
 
             document.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseup", handleMouseUp);
-
-            setIsResizing(false);
+            document.body.style.cursor = "default";
         };
 
         document.addEventListener("mousemove", handleMouseMove);
@@ -111,8 +104,6 @@ export const useResize = (props: {
     };
 
     return {
-        handleResize,
-        setIsResizing,
-        isResizing
+        handleResize
     };
 };
