@@ -16,8 +16,8 @@ export const App = () => {
         {
             id: "1",
             title: "E1",
-            start: "2025-03-23T00:00:00.000Z",
-            end: "2025-03-23T00:15:00.000Z",
+            start: "2025-04-03T00:00:00.000Z",
+            end: "2025-04-03T00:15:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
@@ -32,16 +32,16 @@ export const App = () => {
         {
             id: "2",
             title: "E2",
-            start: "2025-03-25T01:30:00.000Z",
-            end: "2025-03-25T03:00:00.000Z",
+            start: "2025-04-04T01:30:00.000Z",
+            end: "2025-04-04T03:00:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
         {
             id: "3",
             title: "E3",
-            start: "2025-03-24T00:00:00.000Z",
-            end: "2025-03-24T01:45:00.000Z",
+            start: "2025-04-04T00:00:00.000Z",
+            end: "2025-04-04T01:45:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
@@ -49,32 +49,32 @@ export const App = () => {
         {
             id: "4",
             title: "E4",
-            start: "2025-03-22T00:00:00.000Z",
-            end: "2025-03-22T00:30:00.000Z",
+            start: "2025-04-04T00:00:00.000Z",
+            end: "2025-04-04T00:30:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
         {
             id: "5",
             title: "E5",
-            start: "2025-03-31T00:00:00.000Z",
-            end: "2025-03-31T00:30:00.000Z",
+            start: "2025-04-04T00:00:00.000Z",
+            end: "2025-04-04T00:30:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
         {
             id: "7",
             title: "E7",
-            start: "2025-03-24T00:00:00.000Z",
-            end: "2025-03-24T00:30:00.000Z",
+            start: "2025-04-04T00:00:00.000Z",
+            end: "2025-04-04T00:30:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         },
         {
             id: "6",
             title: "E6",
-            start: "2025-03-24T00:00:00.000Z",
-            end: "2025-03-24T00:30:00.000Z",
+            start: "2025-04-04T00:00:00.000Z",
+            end: "2025-04-04T00:30:00.000Z",
             randomProp1: "randomValue",
             randomProp2: "randomValue2"
         }

@@ -1,4 +1,4 @@
-import {startTransition, useRef} from "react";
+import {useRef} from "react";
 
 import type {CalendarEvent} from "@/types/calendar.type";
 
@@ -13,7 +13,6 @@ export const useDrag = () => {
     const startYRef = useRef<number | null>(null);
     const startTimeRef = useRef<Date | null>(null);
     const eventRef = useRef<CalendarEvent | null>(null);
-    const lastHorizontalMoveRef = useRef<number>(0);
 
     const dayViewContainerCoordinates = CssUtil.getElementCoordinates(".day-view-container");
 
@@ -45,11 +44,10 @@ export const useDrag = () => {
                     .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
                     .map((e, index) => ({...e, index}));
 
-                // const newEvents = [...sortedEvents];
                 const eventIndex = sortedEvents.findIndex((e) => e.id === eventRef.current!.id);
                 if (eventIndex !== -1) {
                     sortedEvents[eventIndex] = {...eventRef.current, index: eventIndex};
-                    console.log("sortedEvents", sortedEvents);
+
                     ctx.setEvents(sortedEvents);
                     ctx.setCurrentWeekEvents(ctx.filterEventsForCurrentWeek(sortedEvents, ctx.selectedWeek));
                 }
@@ -63,7 +61,6 @@ export const useDrag = () => {
         startYRef.current = null;
         startTimeRef.current = null;
         eventRef.current = null;
-        lastHorizontalMoveRef.current = 0;
 
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
@@ -150,47 +147,54 @@ export const useDrag = () => {
         const intervalHeight = ((ctx.hourSlotConfig.height ?? 0) * (ctx.hourSlotConfig.interval ?? 60)) / 60;
         const intervals = Math.round(deltaY / intervalHeight);
 
-        if (intervals !== 0) {
-            // Create new start time by adding interval offsets
-            const newStartTime = new Date(startTimeRef.current);
-            newStartTime.setMinutes(newStartTime.getMinutes() + intervals * (ctx.hourSlotConfig.interval ?? 60));
+        // check if it is in top/bottom boundry
+        const isNotMoved = intervals === 0;
+        const isAtTop =
+            intervals < 0 &&
+            draggedElementRef.current?.style.top === `${dayViewContainerCoordinates?.top.toFixed(1)}px`;
+        const eventBottom =
+            parseFloat(draggedElementRef.current?.style.height ?? "0") +
+            parseFloat(draggedElementRef.current?.style.top ?? "0");
+        const isAtBottom =
+            intervals > 0 && eventBottom <= parseFloat(dayViewContainerCoordinates?.bottom.toFixed(1) ?? "0");
 
-            // Create new end time based on duration
-            const eventDuration = DateUtils.getTimeDifferenceInMinutes(
-                new Date(eventRef.current.start),
-                new Date(eventRef.current.end)
-            );
-            const newEndTime = new Date(newStartTime);
-            newEndTime.setMinutes(newEndTime.getMinutes() + eventDuration);
-
-            // Create updated event with new times
-            const updatedEvent: CalendarEvent = {
-                ...eventRef.current,
-                start: newStartTime.toISOString(),
-                end: newEndTime.toISOString()
-            };
-            updatedEvent.dateAndTime = ctx.setEventDateTime(updatedEvent);
-
-            // Update the draggedElement position
-            if (draggedElementRef.current) {
-                const newTop = CssUtil.calculateTopPosition(
-                    updatedEvent,
-                    ctx.hourSlotConfig.height ?? 0,
-                    dayViewContainerCoordinates?.top ?? 0
-                );
-                console.log("newTop", newTop, dayViewContainerCoordinates?.bottom);
-                if (newTop >= (dayViewContainerCoordinates?.top ?? 0)) {
-                    draggedElementRef.current.style.top = `${newTop}px`;
-                    eventRef.current = updatedEvent;
-
-                    return;
-                }
-
-                draggedElementRef.current.style.zIndex = String(eventRef.current?.index);
-            }
-
-            // Store the updated event for next movement calculation
+        if (isNotMoved || isAtTop || isAtBottom) {
+            return;
         }
+
+        // Create new start time by adding interval offsets
+        const newStartTime = new Date(startTimeRef.current);
+        newStartTime.setMinutes(newStartTime.getMinutes() + intervals * (ctx.hourSlotConfig.interval ?? 60));
+
+        // Create new end time based on duration
+        const eventDuration = DateUtils.getTimeDifferenceInMinutes(
+            new Date(eventRef.current.start),
+            new Date(eventRef.current.end)
+        );
+        const newEndTime = new Date(newStartTime);
+        newEndTime.setMinutes(newEndTime.getMinutes() + eventDuration);
+
+        // Create updated event with new times
+        const updatedEvent: CalendarEvent = {
+            ...eventRef.current,
+            start: newStartTime.toISOString(),
+            end: newEndTime.toISOString()
+        };
+        updatedEvent.dateAndTime = ctx.setEventDateTime(updatedEvent);
+
+        // Update the draggedElement position
+        if (draggedElementRef.current) {
+            const newTop = CssUtil.calculateTopPosition(
+                updatedEvent,
+                ctx.hourSlotConfig.height ?? 0,
+                dayViewContainerCoordinates?.top ?? 0
+            );
+
+            draggedElementRef.current.style.top = `${newTop}px`;
+            eventRef.current = updatedEvent;
+        }
+
+        draggedElementRef.current.style.zIndex = String(eventRef.current?.index);
     };
 
     return {handleDragStart};
