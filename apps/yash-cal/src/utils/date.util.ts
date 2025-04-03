@@ -120,6 +120,16 @@ const getTimeDifferenceInMinutes = (start: Date, end: Date) => {
     return diff / (1000 * 60);
 };
 
+/**
+ * Checks if two dates are equal
+ * @param date1 - First date
+ * @param date2 - Second date
+ * @returns True if dates are equal, false otherwise
+ */
+const areDatesEqual = (date1: Date, date2: Date) => {
+    return date1.getTime() === date2.getTime();
+};
+
 export const DateUtils = {
     formatDateToISO,
     getWeekRange,
@@ -128,5 +138,6 @@ export const DateUtils = {
     addDays,
     addMinutes,
     formatDateTime,
-    getTimeDifferenceInMinutes
+    getTimeDifferenceInMinutes,
+    areDatesEqual
 };

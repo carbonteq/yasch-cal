@@ -15,6 +15,8 @@ export const useDrag = () => {
     const eventRef = useRef<CalendarEvent | null>(null);
     const lastHorizontalMoveRef = useRef<number>(0);
 
+    const dayViewContainerCoordinates = CssUtil.getElementCoordinates(".day-view-container");
+
     const handleDragStart = (e: React.MouseEvent<HTMLElement, MouseEvent>, event: CalendarEvent) => {
         e.stopPropagation();
         e.preventDefault();
@@ -31,19 +33,26 @@ export const useDrag = () => {
 
     const handleMouseUp = () => {
         if (eventRef.current) {
-            // Update the events array with the final position
-            const filteredEvents = ctx.events.filter((e) => e.id !== eventRef.current!.id);
-            filteredEvents.push(eventRef.current!);
-            const sortedEvents = filteredEvents
-                .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
-                .map((e, index) => ({...e, index}));
+            const areStartAndEndSame = DateUtils.areDatesEqual(
+                new Date(eventRef.current.start),
+                new Date(ctx.events.find((e) => e.id === eventRef.current!.id)?.start ?? "")
+            );
+            if (!areStartAndEndSame) {
+                // Update the events array with the final position
+                const filteredEvents = ctx.events.filter((e) => e.id !== eventRef.current!.id);
+                filteredEvents.push(eventRef.current!);
+                const sortedEvents = filteredEvents
+                    .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+                    .map((e, index) => ({...e, index}));
 
-            // const newEvents = [...sortedEvents];
-            const eventIndex = sortedEvents.findIndex((e) => e.id === eventRef.current!.id);
-            if (eventIndex !== -1) {
-                sortedEvents[eventIndex] = {...eventRef.current, index: eventIndex};
-                ctx.setEvents(sortedEvents);
-                ctx.setCurrentWeekEvents(ctx.filterEventsForCurrentWeek(sortedEvents, ctx.selectedWeek));
+                // const newEvents = [...sortedEvents];
+                const eventIndex = sortedEvents.findIndex((e) => e.id === eventRef.current!.id);
+                if (eventIndex !== -1) {
+                    sortedEvents[eventIndex] = {...eventRef.current, index: eventIndex};
+                    console.log("sortedEvents", sortedEvents);
+                    ctx.setEvents(sortedEvents);
+                    ctx.setCurrentWeekEvents(ctx.filterEventsForCurrentWeek(sortedEvents, ctx.selectedWeek));
+                }
             }
         }
 
@@ -62,13 +71,14 @@ export const useDrag = () => {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-        // e.stopPropagation();
-        // e.preventDefault();
+        e.stopPropagation();
+        e.preventDefault();
         // Return early if we don't have all the required refs
         if (!draggedElementRef.current || !startYRef.current || !startTimeRef.current || !eventRef.current) {
             return;
         }
 
+        draggedElementRef.current.style.zIndex = "2147483647";
         document.body.style.cursor = "move";
 
         // Get event box dimensions and position
@@ -115,11 +125,18 @@ export const useDrag = () => {
                 };
                 updatedEvent.dateAndTime = ctx.setEventDateTime(updatedEvent);
 
+                const newEvents = [...ctx.events];
+                const eventIndex = newEvents.findIndex((e) => e.id === eventRef.current!.id);
+                if (eventIndex !== -1) {
+                    newEvents[eventIndex] = updatedEvent;
+                }
+
                 // Update the visual position
-                const {width, left} = CssUtil.widthAndLeftofEvent([updatedEvent], updatedEvent);
+                const {width, left} = CssUtil.widthAndLeftofEvent(newEvents, updatedEvent);
                 if (draggedElementRef.current) {
                     draggedElementRef.current.style.left = `${left}px`;
                     draggedElementRef.current.style.width = width;
+                    draggedElementRef.current.style.zIndex = String(eventRef.current?.index);
                 }
 
                 eventRef.current = updatedEvent;
@@ -159,13 +176,20 @@ export const useDrag = () => {
                 const newTop = CssUtil.calculateTopPosition(
                     updatedEvent,
                     ctx.hourSlotConfig.height ?? 0,
-                    CssUtil.getElementCoordinates(".day-view-container")?.top ?? 0
+                    dayViewContainerCoordinates?.top ?? 0
                 );
-                draggedElementRef.current.style.top = `${newTop}px`;
+                console.log("newTop", newTop, dayViewContainerCoordinates?.bottom);
+                if (newTop >= (dayViewContainerCoordinates?.top ?? 0)) {
+                    draggedElementRef.current.style.top = `${newTop}px`;
+                    eventRef.current = updatedEvent;
+
+                    return;
+                }
+
+                draggedElementRef.current.style.zIndex = String(eventRef.current?.index);
             }
 
             // Store the updated event for next movement calculation
-            eventRef.current = updatedEvent;
         }
     };
 
